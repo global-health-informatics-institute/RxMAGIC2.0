@@ -1,0 +1,2 @@
+class Dispensation < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class DrugThresholdSet < ApplicationRecord
+end

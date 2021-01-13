@@ -1,0 +1,2 @@
+class PmapInventory < ApplicationRecord
+end

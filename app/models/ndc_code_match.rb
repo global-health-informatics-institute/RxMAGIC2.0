@@ -1,0 +1,2 @@
+class NdcCodeMatch < ApplicationRecord
+end
