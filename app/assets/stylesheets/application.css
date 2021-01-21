@@ -18,3 +18,8 @@ body {
     margin: 0px;
     padding: 0px;
 }
+
+.icon {
+    height: 4vh;
+    width: 2vw;
+}

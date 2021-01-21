@@ -1,3 +1,125 @@
-Top
-<p>Find me in app/views/home/index.html.erb</p>
-<h1>Home#index</h1>
+<div class="row">
+  <div class="col-9">
+    <h5>Prescription Management</h5><hr>
+    <div class="d-flex p-1 flex-wrap">
+      <div class="col-4 p-1">
+        <div style="display: table-row">
+          <div class="pr-3">
+            <img class="mt-3 icon" src=<%= asset_path("dispense.png")%> >
+          </div>
+          <div style="display: table-cell" class="font-weight-light">
+            <a href="/" class="text-primary font-weight-bold">Dispense</a> <br>
+            Fill electronic prescriptions sent from the EHR.
+          </div>
+        </div>
+      </div>
+      <div class="col-4 p-1">
+        <div style="display: table-row">
+          <div class="pr-3 pl-3">
+            <img class="mt-3 icon" src=<%= asset_path("patient.png")%> >
+          </div>
+          <div style="display: table-cell" class="font-weight-light">
+            <a href="/" class="text-primary font-weight-bold">Manage Patients</a> <br>
+            Manage patient details including PMAP medications and dispense medications (No Rx).
+          </div>
+        </div>
+      </div>
+    </div>
+    <h5 class="mt-4">Inventory Control</h5>
+    <hr>
+    <div class="d-flex p-1 flex-wrap">
+      <div class="col-4 p-1">
+        <div style="display: table-row">
+          <div class="pr-3">
+            <img class="mt-3 icon" src=<%= asset_path("general_inventory.png")%> >
+          </div>
+          <div style="display: table-cell" class="font-weight-light">
+            <a href="/" class="text-primary font-weight-bold">General Inventory</a> <br>
+            Record and manage medications in the general pharmacy inventory.
+          </div>
+        </div>
+      </div>
+      <div class="col-4 p-1">
+        <div style="display: table-row">
+          <div class="pr-3 pl-3">
+            <img class="mt-3 icon" src=<%= asset_path("pmap.png") %>>
+          </div>
+          <div style="display: table-cell" class="font-weight-light">
+            <a href="/" class="text-primary font-weight-bold">PMAP Inventory</a> <br>
+            Enter and manage medications in the the PMAP inventory.
+          </div>
+        </div>
+      </div>
+      <div class="col-4 p-1">
+        <div style="display: table-row">
+          <div class="pr-3 pl-3">
+            <img class="mt-3 icon" src=<%= asset_path("manufacturer.png") %>>
+          </div>
+          <div style="display: table-cell" class="font-weight-light">
+            <a href="/" class="text-primary font-weight-bold">Manage Manufacturers</a> <br>
+            Maintain the list of drug manufacturers and whether they offer patient assistance programs (PAP).
+          </div>
+        </div>
+      </div>
+      <div class="col-4 p-1">
+        <div style="display: table-row">
+          <div class="pr-3">
+            <img class="mt-3 icon"  src=<%= asset_path("inventory_management.png") %> >
+          </div>
+          <div style="display: table-cell" class="font-weight-light">
+            <a href="/" class="text-primary font-weight-bold">Manage PAR Levels</a> <br>
+            Create and manage the minimum amount of each medication that must be available in the clinic.
+          </div>
+        </div>
+      </div>
+    </div>
+    <h5 class="mt-4">Documentation</h5>
+    <hr>
+    <div class="d-flex p-1 flex-wrap">
+      <div class="col-4 p-1">
+        <div style="display: table-row">
+          <div class="pr-3">
+            <img class="mt-3 icon" src=<%= asset_path("report.png") %> >
+          </div>
+          <div style="display: table-cell" class="font-weight-light">
+            <a href="/" class="text-primary font-weight-bold">Activity Sheet</a> <br> A report on the state of the inventory and dispensing activities within the clinic.
+          </div>
+        </div>
+      </div>
+      <div class="col-4 p-1">
+        <div style="display: table-row">
+          <div class="pr-3">
+            <img class="mt-3 icon" src=<%= asset_path("americorp.png") %> >
+          </div>
+          <div style="display: table-cell" class="font-weight-light">
+            <a href="/" class="text-primary font-weight-bold">PMAP Reorders</a> <br> View PMAP medications that have to be reordered this week.
+          </div>
+        </div>
+      </div>
+      <div class="col-4 p-1">
+        <div style="display: table-row">
+          <div class="pr-3">
+            <img class="mt-3 icon" src=<%= asset_path("custom_report.png")%> >
+          </div>
+          <div style="display: table-cell" class="font-weight-light">
+            <a href="/" class="text-primary font-weight-bold"> Inventory & Dispensation Report </a><br/>A summary of dispensation records and the state of
+            the medication inventory.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-3 ">
+    <div class="card" >
+      <div class="card-header bg-primary text-white">
+        <span class="font-weight-bold text-lg-left">Alerts</span>
+      </div>
+      <div class="card-body" style="height: 70vh;">
+        <div class="border">
+          testing
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
