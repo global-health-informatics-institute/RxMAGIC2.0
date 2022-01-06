@@ -1,0 +1,106 @@
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.2/datatables.min.css"/>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> 
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.2/datatables.min.js"></script>
+
+<!-- Modal -->
+<div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" id="modalContent">
+      test
+    </div>
+  </div>
+</div> 
+
+<div>
+    <h3><%=t '.title', :default => "General Inventory" %></h3>
+</div>
+
+<div class="row">
+    <div class="col-10">
+        <table id="inventory" class="table table-striped table-bordered" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Item ID</th>
+                    <th>Lot Number</th>
+                    <th>Current Quantity</th>
+                    <th>Expiration Date</th>
+                    <th style="width: 12.5%;">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% (@items || []).each do |item| %>
+                    <tr>
+                        <td><%= item.drug_name rescue "" %></td>
+                        <td><%= item.formatted_identifier %></td>
+                        <td><%= item.formatted_lot_number %></td>
+                        <td style="text-align: center;"><%= item.current_quantity %></td>
+                        <td ><%= item.expiration_date.strftime("%b-%Y") %></td>
+                        <td style="text-align: center;">
+                            <%= link_to image_tag('edit'), edit_general_inventory_path(item), remote: true %>
+                            
+                            
+                            <a href="/print_bottle_barcode/<%= item.gn_identifier %>">
+                                <img src=<%= asset_path("print.png")%> >
+                            </a>
+                            <a href="/void_item/<%= item.id %>">
+                                <img src=<%= asset_path("delete.png")%> >
+                            </a>
+                        </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-2">
+        <div class="card mb-3">
+            <div class="card-header text-white bg-info"><h5 class="card-title">Stock Summary</h5></div>
+            <div class="card-body ">
+                <a href="#" class="card text-center  m-1">
+                    <div class="card-body">
+                    <h5 class="card-title">Items in Stock</h5>
+                    <p class="card-text">0</p>
+                    </div>
+                </a>
+                <a href="#" class="card text-center  m-1">
+                    <div class="card-body">
+                    <h5 class="card-title">Understocked Items</h5>
+                    <p class="card-text">0</p>
+                    </div>
+                </a>
+                <a href="#" class="card text-center m-1">
+                    <div class="card-body">
+                    <h5 class="card-title">Items About to Expire</h5>
+                    <p class="card-text">0</p>
+                    </div>
+                </a>
+                <a href="#" class="card text-center m-1">
+                    <div class="card-body">
+                    <h5 class="card-title">Expired Items</h5>
+                    <p class="card-text">0</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <%= link_to '<button class="btn btn-primary btn-block">Add Item</button>'.html_safe, new_general_inventory_path, remote: true %>
+
+        
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#inventory').DataTable({
+            "lengthChange": false
+        });
+    } );
+
+
+    function hideModal(){
+        document.getElementById("appModal").style.display = "none"
+        document.getElementById("appModal").classList.remove("show")
+
+    }
+
+</script>

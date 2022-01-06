@@ -1,0 +1,33 @@
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content" id="modalContent">
+        <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="number" class="form-control" id="exampleInputPassword1">
+      </div>        </div>
+      </div>
+    </div> 
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" onMouseDown="engage()">
+  Launch demo modal
+</button>
+
+
+
+<script>
+
+    function engage(){
+      // var modal = document.getElementById("appModal");
+      // .style.display = "block"
+      // modal.className="modal fade show"; 
+
+        $('#appModal').modal('show');
+    }
+
+
+</script>
+

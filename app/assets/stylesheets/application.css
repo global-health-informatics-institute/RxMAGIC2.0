@@ -23,3 +23,8 @@ body {
     height: 4vh;
     width: 2vw;
 }
+
+.icon-small {
+    height: 2vh;
+    width: 1vw;
+}

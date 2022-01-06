@@ -1,0 +1,182 @@
+<link href=<%= asset_path("bootstrap4-toggle.min.css") %> rel="stylesheet">
+<script src=<%= asset_path("bootstrap4-toggle.min.js") %>></script>
+
+<!-- Modal -->
+<div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered mt-n5">
+    <div class="modal-content" id="modalContent">
+      test
+    </div>
+  </div>
+</div> 
+
+<div class="page-header" style="margin: 0px !important;padding: 0px !important;">
+  <h3><%=t '.title', :default => "Dispensation" %></h3>
+</div>
+
+<div class="row">
+  <div class="col-sm-9">
+    <div class="card">
+      <div class="card-header bg-primary">
+        <h5 class="card-title text-white">Prescription Details</h5>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title"><%= @prescription.drug_name %></h5>
+        <table class="table ">
+          <thead>
+            <tr>
+              <th scope="col">Prescribed By</th>
+              <th scope="col" class="text-center">Qty-Prescribed</th>
+              <th scope="col" class="text-center">Qty-Dispensed</th>
+              <th scope="col">Date Prescribed</th>
+              <th scope="col">Directions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><%= @prescription.provider.name %></td>
+              <td class="align-middle text-center"><%= @prescription.quantity %></td>
+              <td class="align-middle text-center"><%= @prescription.amount_dispensed %></td>
+              <td><%= @prescription.date_prescribed.strftime('%b %d, %Y') %></td>
+              <td><%= @prescription.directions %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <div class="card bg-light mt-3">
+      <div class="card-header bg-dark">
+        <h5 class="card-title text-light">Inventory Suggestions : <%= @category %></h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Bottle ID</th>
+              <th scope="col">Lot Number</th>
+              <th scope="col">Expiry Date</th>
+              <th scope="col" class='text-center'>Amount Remaining</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% (@suggestions || []).each do |suggestion| %>
+              <tr>
+                <td scope="row"><%= suggestion['id'] %></td>
+                <td><%= suggestion['lot_number'] %></td>
+                <td><%= suggestion['expiry_date'] %></td>
+                <td class='text-center'><%= suggestion['amount_remaining'] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="card">
+      <div class="card-header bg-info">
+        <h5 class="card-title text-white">Patient Details</h5>
+      </div>
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr >
+              <td scope="col">Name</td>
+              <th scope="col"><%= @patient.name%></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Gender</td>
+              <td><%= @patient.full_gender%></td>
+            </tr>
+            <tr>
+              <td>Age</td>
+              <td><%= @patient.age %></td>
+            </tr>
+            <tr>
+              <td>Preferred Language</td>
+              <td>
+                <input type="checkbox" data-on="ENG" data-off="ESP" checked data-toggle="toggle" data-offstyle="dark" data-onstyle="success">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <table class="table table-borderless">
+      <thead>
+        <tr>
+          <th scope="col" >
+            Scan <img class="mt-3 icon" src=<%= asset_path("barcode.png")%> >
+          </th>
+          <th scope="col">
+            <input type="text" class="form-control" id="bottle" aria-describedby="scanBottle">
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>&nbsp;</td>
+          <td><button type="button" class="btn btn-lg btn-danger btn-block">Cancel</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var timerHand;
+
+  function checkBarcode()
+  {
+      var barcodeTxt = document.getElementById("bottle");
+      if (barcodeTxt.value.trim().match(/[A-Z0-9]+\$/)) {
+
+        if ((barcodeTxt.value.trim().replace(/\$/, "")).replace(/\-/,"").toUpperCase().length >= 8)
+        {
+          let url = "/dispensations/new?rx_id=<%= @prescription.id %>&bottle_id="+barcodeTxt.value.trim().replace(/\$/, "").replace(/\-/,"").toUpperCase()
+          
+          $.ajax({
+            url: url,
+            success: function(data) {
+                console.log('success')
+                
+            },
+            error: function() {
+                console.log('failure')
+            }
+          });
+          //barcodeTxt.value = "";
+        }
+        else
+        {
+          barcodeTxt.value = "";
+          initializeListener();
+        }
+
+      }
+      else
+      {
+        initializeListener();
+      }
+  }
+
+  function initializeListener()
+  {
+    document.getElementById("bottle").focus();
+    timerHand = setTimeout(function () {
+      checkBarcode();
+    }, 3000);
+
+  }
+  function hideModal(){
+    document.getElementById("appModal").style.display = "none"
+    document.getElementById("appModal").classList.remove("show")
+    initializeListener();
+   }
+  setTimeout(initializeListener(), 3000);
+</script>

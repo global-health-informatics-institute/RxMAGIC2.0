@@ -9,6 +9,7 @@ class HomeController < ApplicationController
   end
 
   def contact
+    @item = GeneralInventory.last
   end
 
   def faq

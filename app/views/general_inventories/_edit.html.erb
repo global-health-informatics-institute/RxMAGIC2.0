@@ -1,0 +1,55 @@
+
+<%= form_for :edit_general_inventory, :html => { :class => "form-horizontal general_inventory" }, :url => "/edit_general_inventory"  do |f| %>
+    <div class="card">
+        <h5 class="card-header bg-secondary text-light">Edit General Inventory Item</h5>
+        <div class="card-body">
+            <div class="form-group row">
+                <label for="itemName" class="col-md-3 col-form-label">Item Name</label>
+                <div class="col-md-9">
+                    <input type="text" readonly class="form-control-plaintext" id="itemName" value="<%= @item.drug_name%>" placeholder="Enter Item Name">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="itemIdentifier" class="col-md-3 col-form-label">Item ID</label>
+                <div class="col-md-9">
+                <input type="text" readonly class="form-control-plaintext" id="itemIdentifier" value="<%= @item.formatted_identifier%>" placeholder="Enter Item Identifier">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="itemManufacturer" class="col-md-10 col-form-label">Manufacturer</label>
+                <div class="col-md-11">
+                    <select class="form-control" id="itemManufacturer" placeholder="Enter Item Manufacturer">
+                        <% (@mfns || []).each do |mfn| %>
+                            <option value="<%= mfn.id %>"><%= mfn.name %></option>
+                        <% end %>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="itemLotNumber" class="col-md-10 col-form-label">Lot Number</label>
+                <div class="col-md-11">
+                    <input type="text" class="form-control" id="itemLotNumber" value="<%= @item.lot_number %>" placeholder="Enter Item Lot Number">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="itemExpiryDate" class="col-md-10 col-form-label">Expiry Date</label>
+                <div class="col-md-11">
+                    <input type="text" class="form-control" id="itemExpiryDate" value="<%= @item.expiration_date %>" placeholder="Enter Item Expiry Date">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="itemReceivedQn" class="col-md-10 col-form-label">Received Quantity</label>
+                <div class="col-md-11">
+                    <input type="number" class="form-control" id="itemReceivedQn" value="<%= @item.received_quantity %>" placeholder="Enter Received Quantity">
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-right">
+            <button type="button" class="btn btn-danger" onMouseDown="hideModal()">Close</button>
+            <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+    </div>
+
+    <%= f.hidden_field :inventory_id, :value => nil %>
+<% end %>
+

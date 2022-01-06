@@ -1,0 +1,67 @@
+<link rel="stylesheet" type="text/css" href=<%= asset_path("datatables.min.css") %> />
+<script type="text/javascript" src=<%= asset_path("datatables.min.js") %>> </script>
+
+<!-- Modal -->
+<div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" id="modalContent">
+      test
+    </div>
+  </div>
+</div> 
+
+<div class="page-header" style="margin: 0px !important;padding: 0px !important;">
+  <h3><%=t '.title', :default => "Current Prescriptions" %></h3>
+</div>
+
+<div class="table-responsive-lg">
+  <table class="table table-bordered table-striped" id="prescriptions">
+  <thead class="thead-light">
+  <tr>
+        <th>#</th>
+        <th>Patient</th>
+        <th>Item</th>
+        <th style="width: 5%;">Quantity</th>
+        <th>Directions</th>
+        <th>Provider</th>
+        <th style="width: 5%;">Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% i = 1 %>
+    <% (@prescriptions || []).each do |prescription| %>
+        <tr>
+            <td><%= i %></td>
+            <td><%= prescription.patient.name %></td>
+            <td><%= prescription.drug_name.downcase.titleize rescue ""%></td>
+            <td style="text-align: center"><%= prescription.quantity %></td>
+            <td><%= prescription.directions %></td>
+            <td><%= prescription.provider.name %></td>
+            <td>
+            <%= link_to image_tag('delete'), void_prescription_path(prescription), remote: true %>
+            <%= link_to image_tag('dispense_small'), prescription, :title => "Dispense item" %>
+            </td>
+        </tr>
+        <% i += 1 %>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#prescriptions').DataTable({
+            "pageLength": 10,
+            "lengthChange": false        
+            });
+    } );
+
+
+    function hideModal(){
+        document.getElementById("appModal").style.display = "none"
+        document.getElementById("appModal").classList.remove("show")
+
+    }
+</script>

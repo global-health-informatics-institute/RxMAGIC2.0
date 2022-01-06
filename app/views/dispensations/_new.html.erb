@@ -1,0 +1,41 @@
+<%= form_for :dispensation, :html => { :class => "form-horizontal dispensation" }, :url => "/dispensations", method: "POST"  do |f| %>
+    <div class="card">
+        <h5 class="card-header bg-secondary text-light">Dispense Item</h5>
+        <div class="card-body">
+            <div class="form-group row">
+                <label for="itemName" class="col-md-5 col-form-label">Dispense From:</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control" name="bottle_id" value=<%= @item.gn_identifier.to_s %> readonly>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="itemName" class="col-md-5 col-form-label">Amount Prescribed</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control" value=<%= @prescription.quantity.to_s %> readonly>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="itemName" class="col-md-5 col-form-label">Amount Dispensed</label>
+                <div class="col-md-7">
+                    <input type="number" class="form-control" id="itemName" name="quantity" placeholder="Enter Amount to Dispense">
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-right">
+            <div class="form-group row">
+                <div class="col-md-4">
+                    &nbsp;
+                </div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-lg btn-block btn-danger" onMouseDown="hideModal()">No</button>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-lg btn-block btn-success">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%= f.hidden_field :prescription_id, :value => @prescription.id %>
+<% end %>
+

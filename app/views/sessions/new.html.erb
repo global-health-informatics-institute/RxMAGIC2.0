@@ -1,0 +1,32 @@
+<style>
+    body {
+        background-color: #DEDBA7;
+    }
+</style>
+
+<div class="col-sm-6 p-0 border border-dark ml-auto mr-auto mt-sm-5 bg-light">
+  <div class="container p-3 bg-dark text-white text-center">
+    <h4>LOGIN</h4>
+  </div>
+  <%= form_tag :controller => 'sessions', :action => 'create', :method => :post do %>
+    <div class="row pt-5 pb-2">
+      <div class="col-sm-3 text-right pt-1">
+        <h5 class="font-weight-light">User Name</h5>
+      </div>
+      <div class="col-sm-8 mr-3">
+        <%=text_field(:user, :username, :textCase => "lower", :class => "form-control mr-sm-2",:autocomplete => 'off', :required => true,:placeholder => "Enter username") %>
+      </div>
+    </div>
+    <div class="row pt-4 pb-4">
+      <div class="col-sm-3 text-right pt-1">
+        <h5 class="font-weight-light">Password</h5>
+      </div>
+      <div class="col-sm-8 mr-3">
+        <%=password_field(:user, :password,:class => "form-control mr-sm-2", :required => true,:placeholder => "Enter password") %>
+      </div>
+    </div>
+    <div class="text-center">
+      <%= submit_tag "Login" ,:class => "btn btn-primary mb-5 mt-3 col-sm-6"%>
+    </div>
+  <%end%>
+</div>
