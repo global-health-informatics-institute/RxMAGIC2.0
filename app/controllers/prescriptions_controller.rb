@@ -2,6 +2,15 @@ class PrescriptionsController < ApplicationController
 
     def index
         @prescriptions = Prescription.where("voided = ? AND quantity > amount_dispensed",false).order(date_prescribed: :asc)
+        respond_to do |format|
+            format.js {render :text => view_context.prescriptions(@prescriptions).to_json}
+            format.html {render 'index'} 
+        end
+    end
+
+    def dashboard
+        #This is the function that handles the dashboard page
+        render :layout => false
     end
 
     def show
@@ -49,12 +58,12 @@ class PrescriptionsController < ApplicationController
     end
 
     def ajax_prescriptions
-        # this function services the application dashboard
-    
-        prescriptions = Prescription.where("voided = ? AND quantity > amount_dispensed", false).order(date_prescribed: :asc)
-        #render :text => view_context.prescriptions(prescriptions).to_json
-      end
-    
+        @prescriptions = Prescription.where("voided = ? AND quantity > amount_dispensed",false).order(date_prescribed: :asc)
+        respond_to do |format|
+            format.html
+            format.json {render json: view_context.prescriptions(@prescriptions).to_json}       
+          end
+    end
 
     private
     def get_suggestions(patient_id, drug)

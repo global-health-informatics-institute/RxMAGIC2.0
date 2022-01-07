@@ -34,7 +34,6 @@ class GeneralInventoriesController < ApplicationController
         print_string = entry.create_bottle_label(entry.drug_name,params[:id],entry.expiration_date,entry.lot_number,"General", nil)
         send_data(print_string,:type=>"application/label; charset=utf-8", :stream=> true, :filename=>"#{entry.lot_number}#{rand(10000)}.lbl", :disposition => "inline")
         
-        #send_file "#{Rails.root}/app/assets/images/americorp.png", type: "application/label", x_sendfile: true
     end
 
     def delete

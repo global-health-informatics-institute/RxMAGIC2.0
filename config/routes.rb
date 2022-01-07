@@ -24,6 +24,8 @@ Rails.application.routes.draw do
 
   # Routes for prescriptions
   get "void_prescription/:id" => "prescriptions#void_prescription", as: 'void_prescription'
+  get "ajax_prescriptions" => "prescriptions#ajax_prescriptions"
+  get "dashboard" => "prescriptions#dashboard"
 
   # Routes for dispensaions
   get "print_dispensation_label" => "dispensations#print_dispensation_label"

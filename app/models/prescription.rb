@@ -15,5 +15,10 @@ class Prescription < ApplicationRecord
         return ""
     end
 
-
+    def has_pmap
+        pmap_meds = PmapInventory.where("patient_id = ? and rxaui = ? and current_quantity > ? and voided = ?",
+                                       self.patient_id, self.rxaui, 0, false).pluck(:pap_inventory_id)
+    
+        return (pmap_meds.blank? ? false : true)
+      end
 end
