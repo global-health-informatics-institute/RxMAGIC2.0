@@ -10,7 +10,11 @@ module RxMagic20
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
-
+    config.before_configuration do
+      YAML.load_file("#{Rails.root}/config/local_env.yml").each do |key, value|
+       # ENV[key.to_s] = value
+      end 
+    end
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
