@@ -1,5 +1,6 @@
 class HomeController < ApplicationController
   def index
+    flash[:errors] = "Welcome"
   end
 
   def dashboard

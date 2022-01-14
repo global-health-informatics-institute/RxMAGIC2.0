@@ -43,7 +43,18 @@
       </div>
     </nav>
 
-    
+    <% if !flash[:errors].blank? || !flash[:success].blank? %>
+      <div class="toast mt-3" style="position: absolute; top: 15; right: 50%;">
+        <div class="toast-header <%= flash[:success].blank? ? 'bg-danger' : 'bg-success' %> text-white">
+            <h6><%= flash[:title]  %></h6>
+        </div>
+        <div class="toast-body">
+            <%= flash[:message] %>
+        </div>
+      </div>
+      
+    <% end %>
+
     <div class="container col-md-10 mt-md-3">
       <%= yield %>
     </div>
@@ -57,5 +68,13 @@
       </div>
     </nav>
   </body>
+
+      <script>
+        $(document).ready(function() {
+            $('.toast').toast({delay: 5000});
+            $('.toast').toast('show');
+        });
+    </script>
+
 </html>
   
