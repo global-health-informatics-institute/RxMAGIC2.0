@@ -11,15 +11,25 @@ class SessionsController < ApplicationController
       flash[:error] = "Wrong username or password."
       redirect_to "/login"
     else
-      login(user)
-      redirect_to "/"
+      session[:user_token] = (0...5).map { (65 + rand(26)).chr }.join
+      
+      #logger.info "#{params[:user][:username]} logged in at #{Time.now}"
+      user_role = User.find_by_username(params[:user][:username])
+      if user_role.blank?
+        session[:user] = params[:user][:username]
+        redirect_to "/new_user_role"
+      else
+        login(user_role)
+        redirect_to "/"
+      end
     end
   end
 
   def destroy
-    logout
+    session[:user_token] = nil
+    session[:user] = nil
     flash[:success] = "Successfully logged out"
-    redirect_to root_url
+    redirect_to "/login" and return
   end
 
 end

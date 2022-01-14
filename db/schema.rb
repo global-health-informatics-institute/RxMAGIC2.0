@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2016_09_23_004928) do
+ActiveRecord::Schema.define(version: 2017_04_14_144703) do
 
   create_table "RXNATOMARCHIVE", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "RXAUI", limit: 8, null: false
@@ -161,6 +161,14 @@ ActiveRecord::Schema.define(version: 2016_09_23_004928) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "drug_threshold_sets", primary_key: "drug_set_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "threshold_id"
+    t.string "rxaui"
+    t.boolean "voided", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "drug_thresholds", primary_key: "threshold_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "rxaui"
     t.integer "threshold"
@@ -174,6 +182,7 @@ ActiveRecord::Schema.define(version: 2016_09_23_004928) do
     t.string "rxaui"
     t.string "gn_identifier"
     t.string "lot_number"
+    t.integer "mfn_id"
     t.date "expiration_date"
     t.date "date_received"
     t.integer "received_quantity", default: 0
@@ -183,6 +192,35 @@ ActiveRecord::Schema.define(version: 2016_09_23_004928) do
     t.datetime "updated_at", null: false
     t.string "void_reason"
     t.integer "voided_by"
+  end
+
+  create_table "hl7_errors", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "patient_id"
+    t.integer "provider_id"
+    t.datetime "date_prescribed"
+    t.integer "quantity"
+    t.string "directions"
+    t.string "drug_name"
+    t.string "code"
+    t.boolean "voided", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "manufacturers", primary_key: "mfn_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name"
+    t.boolean "has_pmap", default: false
+    t.boolean "voided", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "ndc_code_matches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "missing_code"
+    t.string "rxaui"
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "news", primary_key: "news_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
@@ -227,7 +265,7 @@ ActiveRecord::Schema.define(version: 2016_09_23_004928) do
     t.string "void_reason"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "manufacturer"
+    t.integer "manufacturer"
   end
 
   create_table "prescriptions", primary_key: "rx_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|

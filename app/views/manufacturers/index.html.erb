@@ -1,0 +1,113 @@
+<link href=<%= asset_path("bootstrap4-toggle.min.css") %> rel="stylesheet">
+<link rel="stylesheet" type="text/css" href=<%= asset_path("datatables.min.css") %> />
+<script type="text/javascript" src=<%= asset_path("datatables.min.js") %>> </script>
+<script src=<%= asset_path("bootstrap4-toggle.min.js") %>></script>
+
+<!-- Modal -->
+<div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" id="modalContent">
+      test
+    </div>
+  </div>
+</div> 
+
+<div class="page-header" style="margin: 0px !important;padding: 0px !important;">
+  <h3><%=t '.title', :default => "Manufacturers" %></h3>
+</div>
+
+<div class="row">
+    <div class="col-10">
+        <table id="manufacturers" class="table table-striped table-bordered" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th style="width: 3%;">#</th>
+                    <th>Manufacturer</th>
+                    <th style="width: 10%;">Has PAP</th>
+                    <th style="width: 5%;">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% i = 1 %>
+                <% (@manufacturers || []).each do |manufacturer| %>
+                    <tr>
+                        <td><%= i %></td>
+                        <td><%= manufacturer.name %></td>
+                        <td>
+                            <input type="checkbox" data-id="<%= manufacturer.id %>" data-on="Has PAP" data-off="No PAP" <%= manufacturer.has_pmap ? 'checked' : 'unchecked' %> data-toggle="toggle" data-offstyle="danger" data-onstyle="success">
+                        </td>
+                        <td>
+                            <%= link_to image_tag('edit'), edit_manufacturer_path(manufacturer), remote: true %>                                    
+                            <%= link_to image_tag('delete'), void_manufacturer_path(manufacturer), remote: true %>
+                        </td>
+                    </tr>
+                    <% i += 1 %>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-2">
+        <div class="card mb-3">
+            <div class="card-header text-white bg-info text-center"><h5 class="card-title">Manufacturer Summary</h5></div>
+            <div class="card-body ">
+                <a href="#" class="card text-center  m-2">
+                    <div class="card-body">
+                    <h5 class="card-subtitle">Manufacturers</h5>
+                    <p class="card-text"><%= @manufacturers.length %></p>
+                    </div>
+                </a>
+                <a href="#" class="card text-center mt-3 m-1">
+                    <div class="card-body">
+                    <h5 class="card-subtitle">MFRs With PMAP</h5>
+                    <p class="card-text"><%= pmap_options %></p>
+                    </div>
+                </a>
+                <a href="#" class="card text-center mt-3 m-1">
+                    <div class="card-body">
+                    <h5 class="card-subtitle">Supporting Our Patients</h5>
+                    <p class="card-text"><%= pmap_suppliers %></p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <%= link_to '<button class="btn btn-primary btn-lg btn-block">Add Manufacturer</button>'.html_safe, new_manufacturer_path, remote: true %>        
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#manufacturers').DataTable({
+            "pageLength": 9,
+            "lengthChange": false        
+            });
+    } );
+
+
+    function hideModal(){
+        document.getElementById("appModal").style.display = "none"
+        document.getElementById("appModal").classList.remove("show")
+
+    }
+
+    function updatePmap(){
+     
+    }
+
+    $(function() {
+        $('input:checkbox').change(function(e) {
+            $.ajax({
+                url: '/toggle_pmap/' + $(this).attr("data-id"),
+                type: 'POST',
+                headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+                data: {'status': $(this).prop('checked')},
+                success: function(data) {
+                    console.log('success')
+                },
+                error: function() {
+                    console.log('failure')
+                }
+            });
+        })
+    })
+</script>

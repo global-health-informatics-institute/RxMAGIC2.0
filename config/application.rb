@@ -12,7 +12,7 @@ module RxMagic20
     config.load_defaults 6.0
     config.before_configuration do
       YAML.load_file("#{Rails.root}/config/local_env.yml").each do |key, value|
-       # ENV[key.to_s] = value
+        ENV[key.to_s] = value
       end 
     end
     # Settings in config/environments/* take precedence over those specified here.

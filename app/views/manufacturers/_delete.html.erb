@@ -1,0 +1,17 @@
+<%= form_for :manufacturer, :html => { :class => "form-horizontal general_inventory" }, :url => "/manufacturers/#{@manufacturer.id}", method: "delete"  do |f| %>
+    <div class="card">
+        <h5 class="card-header bg-secondary text-light">Cancel Prescription</h5>
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-12">
+                    Are you sure you want to delete <%= @manufacturer.name %> as a manufacturer?
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-right">
+            <button type="button" class="btn btn-danger" onMouseDown="hideModal()">No</button>
+            <button type="submit" class="btn btn-success">Yes</button>
+        </div>
+    </div>
+<% end %>
+

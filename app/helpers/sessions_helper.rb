@@ -1,22 +1,25 @@
 module SessionsHelper
   def login(user)
-    user_rec = User.find_by_username(user)
-    session[:username] = user_rec.username
-    session[:user_role] = user_rec.user_role
+    session[:user] = user.username
+    session[:user_role] = user.user_role
   end
 
   def logout
-    session.delete(:username)
+    session.delete(:user)
     session.delete(:user_role)
   end
 
   def current_user()
-    if session[:username]
-      @current_user ||= User.find_by_username(id: session[:username])
+    if session[:user]
+      @current_user ||= User.find_by_username(id: session[:user])
     end
   end
 
+  def current_username
+    return session[:user]
+  end
+
   def logged_in?
-    !current_user.blank?
+    !session[:user_token].blank?
   end
 end

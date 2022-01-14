@@ -12,13 +12,13 @@
             <div class="form-group row">
                 <label for="itemIdentifier" class="col-md-3 col-form-label">Item ID</label>
                 <div class="col-md-9">
-                <input type="text" readonly class="form-control-plaintext" id="itemIdentifier" value="<%= @item.formatted_identifier%>" placeholder="Enter Item Identifier">
+                    <input type="text" readonly class="form-control-plaintext" id="itemIdentifier" value="<%= @item.formatted_identifier%>" placeholder="Enter Item Identifier">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="itemManufacturer" class="col-md-10 col-form-label">Manufacturer</label>
                 <div class="col-md-11">
-                    <select class="form-control" id="itemManufacturer" placeholder="Enter Item Manufacturer">
+                    <select class="form-control" id="itemManufacturer" placeholder="Enter Item Manufacturer" required>
                         <% (@mfns || []).each do |mfn| %>
                             <option value="<%= mfn.id %>"><%= mfn.name %></option>
                         <% end %>
@@ -28,19 +28,19 @@
             <div class="form-group row">
                 <label for="itemLotNumber" class="col-md-10 col-form-label">Lot Number</label>
                 <div class="col-md-11">
-                    <input type="text" class="form-control" id="itemLotNumber" value="<%= @item.lot_number %>" placeholder="Enter Item Lot Number">
+                    <input type="text" class="form-control" id="itemLotNumber" value="<%= @item.lot_number %>" placeholder="Enter Item Lot Number" required>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="itemExpiryDate" class="col-md-10 col-form-label">Expiry Date</label>
                 <div class="col-md-11">
-                    <input type="text" class="form-control" id="itemExpiryDate" value="<%= @item.expiration_date %>" placeholder="Enter Item Expiry Date">
+                    <input type="text" class="form-control" id="itemExpiryDate" value="<%= @item.expiration_date %>" placeholder="Enter Item Expiry Date" required>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="itemReceivedQn" class="col-md-10 col-form-label">Received Quantity</label>
                 <div class="col-md-11">
-                    <input type="number" class="form-control" id="itemReceivedQn" value="<%= @item.received_quantity %>" placeholder="Enter Received Quantity">
+                    <input type="number" class="form-control" id="itemReceivedQn" value="<%= @item.received_quantity %>" placeholder="Enter Received Quantity" required>
                 </div>
             </div>
         </div>

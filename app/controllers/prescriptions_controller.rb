@@ -62,7 +62,7 @@ class PrescriptionsController < ApplicationController
         respond_to do |format|
             format.html
             format.json {render json: view_context.prescriptions(@prescriptions).to_json}       
-          end
+        end
     end
 
     private

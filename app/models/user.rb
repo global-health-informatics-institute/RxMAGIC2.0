@@ -1,4 +1,10 @@
 class User < ApplicationRecord
+  has_one :user_credential, :foreign_key => :user_id
+  validates :username, :presence => true, :uniqueness => true, :case_sensitive => false
+  validates :user_role, :presence => true
+  validates :first_name, :presence => true
+  validates :last_name, :presence => true
+
 
   def self.authenticate(params)
     #function to authenticate user based on current authentication method
@@ -21,34 +27,12 @@ class User < ApplicationRecord
   end
 
   def self.local_authenticate(params)
-
+    user = User.where(username: params[:username]).first
+    user && user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
   end
 
   def self.ldap_authenticate(params)
-    ldap = Net::LDAP.new(:base => ENV["LDAP_BASE"], :host => ENV["LDAP_HOST"])
-    ldap.auth ENV["LDAP_Service_Account"], ENV["LDAP_PASSWORD"]
-
-    if ldap.bind(:method => :simple, :username => ENV["LDAP_DN"], :password => ENV["LDAP_PASSWORD"])
-      usr = params[:username]
-      usr_password = params[:password]
-
-      user_dn = ldap.search(filter: Net::LDAP::Filter.eq("sAMAccountName", "#{usr.to_s.strip}"),
-                            attributes: %w[ dn ], return_result: true).first.dn rescue nil
-
-      if user_dn != nil
-        results = ldap.bind(:method => :simple, :username => user_dn.to_s.strip, :password => usr_password.to_s.strip)
-
-        if results
-          # authentication succeeded
-          return usr
-        else
-          return false
-        end
-      else
-        return false
-      end
-    else
-      return false
-    end
+    auth = Ldap.new()
+    return auth.authenticate_user(params[:username], params[:password])
   end
 end

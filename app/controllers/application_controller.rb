@@ -1,15 +1,16 @@
 class ApplicationController < ActionController::Base
   include SessionsHelper
-  before_action :user_logged_in?, :only => ['/login', '/dashboard', '/ajax_prescriptions']
+  before_action :authenticate
   helper_method :current_user
-  #before_action :user_logged_in?, only: ["/login"]
   protect_from_forgery with: :exception
   
-
-  def user_logged_in?
-    puts("checking login")
-    if !logged_in?
-      redirect_to login_url
+  def authenticate
+    exempt_paths = ['/login', '/dashboard', '/ajax_prescriptions.json','/sessions/create']
+        
+    if !(exempt_paths.include? request.path.to_s)
+      if !logged_in?
+        redirect_to login_url
+      end  
     end
   end
 
