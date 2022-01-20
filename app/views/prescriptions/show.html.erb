@@ -99,7 +99,7 @@
             <tr>
               <td>Preferred Language</td>
               <td>
-                <input type="checkbox" data-on="ENG" data-off="ESP" checked data-toggle="toggle" data-offstyle="dark" data-onstyle="success">
+                <input type="checkbox" data-on="ENG" data-off="ESP" <%= @patient.language == "ENG" ? 'checked' : 'unchecked' %> data-toggle="toggle" data-offstyle="dark" data-onstyle="success">
               </td>
             </tr>
           </tbody>
@@ -130,6 +130,23 @@
 
 <script type="text/javascript">
   var timerHand;
+
+  $(function() {
+      $('input:checkbox').change(function(e) {
+          $.ajax({
+              url: '/update_language/' + <%= @patient.id %>,
+              type: 'POST',
+              headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+              data: {'language': ($(this).prop('checked') ? "ENG" : "ESP")},
+              success: function(data) {
+                  console.log('success')
+              },
+              error: function() {
+                  console.log('failure')
+              }
+          });
+      })
+  })
 
   function checkBarcode()
   {

@@ -5,7 +5,14 @@ class Patient < ApplicationRecord
     end
 
     def full_gender
-        return self.gender == "F" ? "Female" : "Male"
+        case self.gender
+        when "F"
+            return "Female"
+        when "M"
+            return "Male"
+        else 
+            return "Other"
+        end
     end
 
     def formatted_dob

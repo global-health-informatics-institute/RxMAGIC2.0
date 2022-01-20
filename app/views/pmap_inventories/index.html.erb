@@ -1,0 +1,105 @@
+<link rel="stylesheet" type="text/css" href=<%= asset_path("datatables.min.css") %> />
+<script type="text/javascript" src=<%= asset_path("datatables.min.js") %>> </script>
+<script type="text/javascript" src=<%= asset_path("bootstrap-typeahead.js") %>> </script>
+
+<!-- Modal -->
+<div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" id="modalContent">
+      test
+    </div>
+  </div>
+</div>
+<div>
+    <h3><%=t '.title', :default => "PMAP Inventory" %></h3>
+</div>
+<div class="row">
+    <div class="col-10">
+        <table id="inventory" class="table table-striped table-bordered" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Item ID</th>
+                    <th>Patient</th>
+                    <th>Lot Number</th>
+                    <th>Current Quantity</th>
+                    <th>Expiration Date</th>
+                    <th style="width: 12.5%;">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% (@items || []).each do |item| %>
+                    <tr>
+                        <td><%= item.drug_name rescue "" %></td>
+                        <td><%= item.formatted_identifier %></td>
+                        <td><%= link_to item.owner, "/patients/#{item.patient_id}" %></td>
+                        <td><%= item.formatted_lot_number %></td>
+                        <td style="text-align: center;"><%= item.current_quantity %></td>
+                        <td ><%= item.expiration_date.strftime("%b-%Y") %></td>
+                        <td style="text-align: center;">
+                            <%= link_to image_tag('edit'), edit_pmap_inventory_path(item), remote: true %>                            
+                            <%= link_to image_tag('print'), "/pmap_inventories/print/#{item.pap_identifier}" %>
+                            <%= link_to image_tag('delete'), void_pmap_inventory_path(item), remote: true %>
+                        </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-2">
+        <div class="card mb-3">
+            <div class="card-header text-white bg-info"><h5 class="card-title">Stock Summary</h5></div>
+            <div class="card-body ">
+                <a href="#" class="card text-center  m-2">
+                    <div class="card-body">
+                    <h5 class="card-title">Items in Stock</h5>
+                    <p class="card-text">0</p>
+                    </div>
+                </a>
+                <a href="#" class="card text-center mt-3 m-1">
+                    <div class="card-body">
+                    <h5 class="card-title">Understocked Items</h5>
+                    <p class="card-text">0</p>
+                    </div>
+                </a>
+                <a href="#" class="card text-center mt-3 m-1">
+                    <div class="card-body">
+                    <h5 class="card-title">Items About to Expire</h5>
+                    <p class="card-text">0</p>
+                    </div>
+                </a>
+                <a href="#" class="card text-center mt-3 m-1">
+                    <div class="card-body">
+                    <h5 class="card-title">Expired Items</h5>
+                    <p class="card-text">0</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <%#= link_to '<button class="btn btn-primary btn-lg btn-block">Add Item</button>'.html_safe, new_pmap_inventory_path, remote: true %>        
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#inventory').DataTable({
+            "lengthChange": false
+        });
+
+        $('#itemName').typeahead({
+          ajax: { 
+                url: '/drug_name_suggestions',
+                triggerLength: 2 
+              }
+        });
+    } );
+
+
+    function hideModal(){
+        document.getElementById("appModal").style.display = "none"
+        document.getElementById("appModal").classList.remove("show")
+
+    }
+
+</script>

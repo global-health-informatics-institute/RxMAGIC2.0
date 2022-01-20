@@ -1,6 +1,5 @@
 class GeneralInventoriesController < ApplicationController
     
-
     def index
         @items = GeneralInventory.where("current_quantity > ? and voided = ? ", 0, false)
         #@aboutToExpire = aboutToExpire_items.length
@@ -20,10 +19,10 @@ class GeneralInventoriesController < ApplicationController
     def create
         new_item = GeneralInventory.create(gn_params)
         if new_item.errors.blank?
-            flash[:success] = "#{params[:general_inventory][:name]} was successfully added to inventory."
+            flash[:success] = {title: "Inventory Item Added", message: "#{params[:general_inventory][:name]} was successfully added to inventory."}
             print_and_redirect("/general_inventories/print/#{new_item.bottle_id}", "/general_inventories")
         else
-            flash[:errors] = new_item.errors
+            flash[:errors] = {title: "Failed to Create Record", message: new_item.errors}
             redirect_to "/general_inventories"
         end
     end
@@ -50,9 +49,9 @@ class GeneralInventoriesController < ApplicationController
     def destroy
         item = GeneralInventory.where(:gn_inventory_id => params[:id]).update(gn_params)
         if item.blank?
-            flash[:errors] = ["Item with bottle id #{params[:general_inventory][:gn_id]} could not be found"]
+            flash[:errors] = {title: "Failed to Delete Record", message: "Item with bottle id #{params[:general_inventory][:gn_id]} could not be found"}
         else
-            flash[:success] = "#{item.first.drug_name} #{item.first.lot_number} was successfully deleted."
+            flash[:success] = {title: "Successfully deleted record", message: "#{item.first.drug_name} #{item.first.lot_number} was successfully deleted."}
             news = News.where("refers_to = ? AND resolved = ?", item.first.bottle_id, false).update({
                 :resolved => true,
                 :resolution => "Item was voided",

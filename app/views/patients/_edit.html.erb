@@ -1,0 +1,29 @@
+<%= form_for :manufacturer, :url => "/manufacturers/update", :method => "PATCH"  do |f| %>
+    <div class="card">
+        <h5 class="card-header bg-dark text-light">Editing Manufacturer Details</h5>
+        <div class="card-body">
+            <div class="form-group row">
+                <label for="itemName" class="col-md-10 col-form-label">Manufacturer Name</label>
+                <div class="col-md-11">
+                    <input type="text" class="form-control" value='<%= @manufacturer.name %>' placeholder="Enter Manufacturer Name" autocomplete="off" name="manufacturer[name]" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="itemLotNumber" class="col-md-6 col-form-label">Manufacturer has PAP?</label>
+                <div class="col-md-3">
+                    <input class="form-check-input" type="radio" name="manufacturer[has_pmap]" <%= @manufacturer.has_pmap ? 'checked' : 'unchecked' %> id="gridRadios1" value="true" required>
+                     <label class="form-check-label" for="gridRadios1">Yes</label>
+                </div>
+                <div class="col-md-3">
+                    <input class="form-check-input" type="radio" name="manufacturer[has_pmap]" <%= !@manufacturer.has_pmap ? 'checked' : 'unchecked' %> id="gridRadios1" value="false" required>
+                    <label class="form-check-label" for="gridRadios1">No</label>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-right">
+            <button type="button" class="btn btn-lg btn-danger mr-2" onMouseDown="hideModal()">Close</button>
+            <button type="submit" class="btn btn-lg btn-success">Submit</button>
+        </div>
+    </div>
+    <%= f.hidden_field :mfn_id, :value => @manufacturer.id %>
+<% end %>

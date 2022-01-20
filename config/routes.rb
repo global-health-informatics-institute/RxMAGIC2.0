@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get 'home/index'
   get 'home/about'
   get 'home/faq'
+  get '/provider_suggestions' => "home#provider_suggestions"
   get '/drug_name_suggestions' => "home#drug_name_suggestions"
 
   # Routes for the sessions controller
@@ -24,6 +25,11 @@ Rails.application.routes.draw do
   post "/delete_general_inventory_item/:id" => "general_inventories#destroy"
 
 
+  # Routes for the pmap inventory 
+  get "pmap_inventories/print/:id" => "pmap_inventories#print"
+  get "/void_pmap_inventory/:id" => "pmap_inventories#delete", as: 'void_pmap_inventory'
+  post "/delete_pmap_inventory_item/:id" => "pmap_inventories#destroy"
+
   # Routes for prescriptions
   get "void_prescription/:id" => "prescriptions#void_prescription", as: 'void_prescription'
   get "ajax_prescriptions" => "prescriptions#ajax_prescriptions"
@@ -31,10 +37,16 @@ Rails.application.routes.draw do
 
   # Routes for dispensaions
   get "print_dispensation_label" => "dispensations#print_dispensation_label"
+  get "/refill" => "dispensations#refill"
+  post "/refill" => "dispensations#refill"
 
   # Routes for users
   get "/new_user_role" => "users#new_user_role"
   post "users/create_user_role", as: 'create_user_role'
+
+  # Routes for patients
+  post "/update_language/:id" => "patients#update_language"
+
 
   # Routes for manufacturers
   post "/toggle_pmap/:id" => "manufacturers#toggle_pmap"
@@ -46,5 +58,6 @@ Rails.application.routes.draw do
   resources :prescriptions
   resources :dispensations
   resources :manufacturers
+  resources :pmap_inventories
   resources :general_inventories
 end

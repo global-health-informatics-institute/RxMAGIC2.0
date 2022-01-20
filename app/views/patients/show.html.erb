@@ -1,40 +1,125 @@
-<div class="row ">
-  <div class="col mb-8">
-    <div class="card border-dark" style="width: 75rem">
-      <div class="card-header text-white bg-primary">Featured</div>
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-      </div>
-    </div>
-  </div>
-  <div class="col mb-4">
-    <div class="card">
-      <img src="..." class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-      </div>
+<link href=<%= asset_path("bootstrap4-toggle.min.css") %> rel="stylesheet">
+<script src=<%= asset_path("bootstrap4-toggle.min.js") %>></script>
+<script type="text/javascript" src=<%= asset_path("bootstrap-typeahead.js") %>> </script>
+  
+<!-- Modal -->
+<div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" id="modalContent">
+      test
     </div>
   </div>
 </div>
 
 <div class="row ">
-  <div class="col mb-8">
-    <div class="card border-dark">
+  <div class="col mb-7">
+    <div class="card border-dark" style="width: 75rem">
+      <div class="card-header text-white bg-primary">Patient Details</div>
       <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        <h4 class="card-title"><%= @patient.name %></h5>
+        <table class="table">        
+            <tr>
+              <th scope="row">Birthdate</th>
+              <td><%= @patient.formatted_dob %></td>
+              <th>Age</th>
+              <td><%= @patient.age %></td>
+            </tr>
+            <tr>
+              <th scope="row">Gender</th>
+              <td><%= @patient.full_gender %></td>
+              <th>Preferred Language</th>
+              <td>
+                <input type="checkbox" data-on="ENG" data-off="ESP" <%= @patient.language == "ENG" ? 'checked' : 'unchecked' %> data-toggle="toggle" data-offstyle="dark" data-onstyle="success">
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Street Address</th>
+              <td><%= @patient.address %></td>
+              <th>City</th>
+              <td><%= @patient.city %></td>
+            </tr>
+            <tr>
+              <th scope="row">State</th>
+              <td><%= @patient.state %></td>
+              <th>Zip Code</th>
+              <td><%= @patient.zip %></td>
+            </tr>
+        </table>
+      </div>
+    </div>
+    <div class="card border-dark mt-3" style="width: 75rem">
+      <div class="card-header text-white bg-secondary">Dispensation History</div>
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">Amount Dispensed</th>
+              <th scope="col">Date Dispensed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% (@history || []).each do |dispensation| %>
+              <tr>
+                <td><%= dispensation.drug_name %></td>
+                <td><%= dispensation.quantity%></td>
+                <td><%= dispensation.dispensation_date.strftime('%b %d, %Y') %> </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
-  <div class="col mb-4">
+  <div class="col mb-5">
     <div class="card">
-      <img src="..." class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      <div class="card-header text-white bg-info">PMAP Details</div>
+      <div class="card-body mb-3" style="max-height: 30vh;overflow:auto;">
+        <% (@pmap_meds || []).each do |manfucturer, values|%>
+          <h6 class="card-title"><%= manfucturer%></h6>
+          <table class="table">
+            <% (values || []).each do |item| %>
+              <tr>
+                <td><%= item[0]%></td>
+                <td><%= item[1]%></td>
+                <td>
+                  <%= link_to image_tag('add'), "/pmap_inventories/new?patient_id=#{@patient.id}&mfn_id=#{item[2]}&rx=#{item[3]}", remote: true %>       
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        <% end %>
       </div>
     </div>
+    <%= link_to '<button class="btn btn-primary btn-lg btn-block m-2 mt-4">Add PMAP Item</button>'.html_safe, "/pmap_inventories/new?patient_id=#{@patient.id}", remote: true %>       
+    <%= link_to '<button class="btn btn-warning btn-lg btn-block m-2">Dispense (No Rx)</button>'.html_safe, "/refill?patient_id=#{@patient.id}", remote: true %>        
+    <%= link_to '<button class="btn btn-danger btn-lg btn-block m-2">Cancel</button>'.html_safe, patients_path %>         
   </div>
 </div>
+
+
+<script type="text/javascript">
+    
+    function hideModal(){
+        document.getElementById("appModal").style.display = "none"
+        document.getElementById("appModal").classList.remove("show")
+
+    }
+
+    $(function() {
+            $('input:checkbox').change(function(e) {
+                $.ajax({
+                    url: '/update_language/' + <%= @patient.id %>,
+                    type: 'POST',
+                    headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+                    data: {'language': ($(this).prop('checked') ? "ENG" : "ESP")},
+                    success: function(data) {
+                        console.log('success')
+                    },
+                    error: function() {
+                        console.log('failure')
+                    }
+                });
+            })
+        })
+</script>

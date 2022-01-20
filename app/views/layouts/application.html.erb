@@ -19,7 +19,6 @@
   <body>
     <nav class="navbar navbar-expand-md bg-dark navbar-dark">
       <div class="col-sm-10 text-right">
-
         <ul class="navbar-nav">
           <a class="navbar-brand text-secondary" href="/">RxMAGIC 2.0</a>
           <li class="nav-item">
@@ -43,13 +42,13 @@
       </div>
     </nav>
 
-    <% if !flash[:errors].blank? || !flash[:success].blank? %>
-      <div class="toast mt-3" style="position: absolute; top: 15; right: 50%;">
+    <% if (!flash[:errors].blank? || !flash[:success].blank?) %>
+      <div class="toast mt-3" style="position: absolute; top: 25; right: 50%;">
         <div class="toast-header <%= flash[:success].blank? ? 'bg-danger' : 'bg-success' %> text-white">
-            <h6><%= flash[:title]  %></h6>
+            <h6><%= flash[:success].blank? ? flash[:errors][:title] : flash[:success][:title]  %></h6>
         </div>
         <div class="toast-body">
-            <%= flash[:message] %>
+            <%= flash[:success].blank? ? flash[:errors][:message] : flash[:success][:message] %>
         </div>
       </div>
       

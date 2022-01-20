@@ -1,13 +1,12 @@
-
-document.getElementById("modalContent").innerHTML = "<%= j (render partial: 'new') %>"
+document.getElementById("modalContent").innerHTML = "<%= j (render partial: 'refill') %>"
 document.getElementById("appModal").style.display = "block"
 document.getElementById("appModal").classList.add("show")
 
 $(function() {
     
-    $('#itemName').typeahead({
+    $('#provider').typeahead({
         ajax: { 
-            url: '/drug_name_suggestions',
+            url: '/provider_suggestions',
             triggerLength: 2 
             }
     });
