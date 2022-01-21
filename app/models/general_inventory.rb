@@ -37,17 +37,20 @@ class GeneralInventory < ApplicationRecord
       end
     end
 
-    def aboutToExpire_items
+    def self.aboutToExpire_items
+      return GeneralInventory.where("voided = ? AND current_quantity > ? AND expiration_date  BETWEEN ? AND ?",
+        false,0,Date.today.strftime('%Y-%m-%d'),Date.today.advance(:months => 2).end_of_month.strftime('%Y-%m-%d'))
     end
 
-    def underStocked
+    def self.underStocked
       
     end
 
-    def expired_items
+    def self.expired_items
+      return GeneralInventory.where("voided = ? AND current_quantity > ? AND expiration_date <= ? ", false,0, Date.current.strftime('%Y-%m-%d'))
     end
 
-    def wellStocked
+    def self.wellStocked
     end
 
 end

@@ -1,7 +1,7 @@
 
-<%= form_for :edit_general_inventory, :html => { :class => "form-horizontal general_inventory" }, :url => "/edit_general_inventory"  do |f| %>
+<%= form_for :pmap_inventory, :url => "/pmap_inventories/#{params[:id]}", method: 'PUT'  do |f| %>
     <div class="card">
-        <h5 class="card-header bg-secondary text-light">Edit General Inventory Item</h5>
+        <h5 class="card-header bg-secondary text-light">Edit PMAP Inventory Item</h5>
         <div class="card-body">
             <div class="form-group row">
                 <label for="itemName" class="col-md-3 col-form-label">Item Name</label>
@@ -18,9 +18,9 @@
             <div class="form-group row">
                 <label for="itemManufacturer" class="col-md-10 col-form-label">Manufacturer</label>
                 <div class="col-md-11">
-                    <select class="form-control" id="itemManufacturer" placeholder="Enter Item Manufacturer" required>
+                    <select class="form-control" id="itemManufacturer" name="pmap_inventory[mfn_id]" placeholder="Enter Item Manufacturer" required>
                         <% (@mfns || []).each do |mfn| %>
-                            <option value="<%= mfn.id %>"><%= mfn.name %></option>
+                            <option <%= (@item.mfn_id || '') == mfn.mfn_id ? 'Selected' : ''%> value="<%= mfn.id %>"><%= mfn.name %></option>
                         <% end %>
                     </select>
                 </div>
@@ -28,28 +28,26 @@
             <div class="form-group row">
                 <label for="itemLotNumber" class="col-md-10 col-form-label">Lot Number</label>
                 <div class="col-md-11">
-                    <input type="text" class="form-control" id="itemLotNumber" value="<%= @item.lot_number %>" placeholder="Enter Item Lot Number" required>
+                    <input type="text" class="form-control" id="itemLotNumber" name="pmap_inventory[lot_number]" value="<%= @item.lot_number %>" placeholder="Enter Item Lot Number" required>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="itemExpiryDate" class="col-md-10 col-form-label">Expiry Date</label>
                 <div class="col-md-11">
-                    <input type="text" class="form-control" id="itemExpiryDate" value="<%= @item.expiration_date %>" placeholder="Enter Item Expiry Date" required>
+                    <input type="date" class="form-control" id="itemExpiryDate" name="pmap_inventory[expiration_date]" value="<%= @item.expiration_date %>" placeholder="Enter Item Expiry Date" required>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="itemReceivedQn" class="col-md-10 col-form-label">Received Quantity</label>
                 <div class="col-md-11">
-                    <input type="number" class="form-control" id="itemReceivedQn" value="<%= @item.received_quantity %>" placeholder="Enter Received Quantity" required>
+                    <input type="number" class="form-control" id="itemReceivedQn" name="pmap_inventory[received_quantity]" value="<%= @item.received_quantity %>" placeholder="Enter Received Quantity" required>
                 </div>
             </div>
         </div>
         <div class="card-footer text-right">
-            <button type="button" class="btn btn-danger" onMouseDown="hideModal()">Close</button>
             <button type="submit" class="btn btn-success">Submit</button>
+            <button type="button" class="btn btn-danger" onMouseDown="hideModal()">Close</button>
         </div>
     </div>
-
-    <%= f.hidden_field :inventory_id, :value => nil %>
 <% end %>
 

@@ -1,9 +1,9 @@
 class PmapInventoriesController < ApplicationController
     def index
         @items = PmapInventory.where("current_quantity > ? and voided = ? ", 0, false)
-        #@aboutToExpire = aboutToExpire_items.length
+        @aboutToExpire = PmapInventory.aboutToExpire_items.length
         #@underStocked = underStocked.length
-        #@expired = expired_items.length
+        @expired = PmapInventory.expired_items.length
         #@wellStocked = wellStocked.length
     end
 
@@ -40,6 +40,8 @@ class PmapInventoriesController < ApplicationController
     end
     
     def edit
+        @item = PmapInventory.find(params[:id])
+        @mfns = Manufacturer.select(["mfn_id", "name"])
         respond_to do |format|
             format.js {render layout: false}
             format.html { render 'edit'} # I had to tell rails to use the index by default if it's a html request. 
@@ -47,9 +49,34 @@ class PmapInventoriesController < ApplicationController
     end
 
     def update
+        item = PmapInventory.find(params[:id])
+        if item.blank?
+            flash[:errors] = {title: "Failed to Update Record", message: "Item could not be found"}
+        else
+            item.lot_number = params[:pmap_inventory][:lot_number].upcase
+            item.expiration_date = params[:pmap_inventory][:expiration_date].to_date rescue nil
+            item.received_quantity = params[:pmap_inventory][:received_quantity].to_i + (item.received_quantity - item.current_quantity)
+            item.current_quantity = params[:pmap_inventory][:received_quantity].to_i
+            item.mfn_id = params[:pmap_inventory][:mfn_id]
+            item.save
+            if item.errors.blank?
+                flash[:success] = {title: "Successfully deleted record", message: "#{item.drug_name} #{item.lot_number} was successfully deleted."}
+                news = News.where("refers_to = ? AND resolved = ?", item.bottle_id, false).update({
+                    :resolved => true,
+                    :resolution => "Item was voided",
+                    :date_resolved => Date.today
+                })
+            else
+                flash[:errors] = {title: "Failed to Update Record", message: "Item could not be found"}
+            end
+            #logger.info "#{current_user.username} voided pmap inventory item #{params[:id]}"
+        end
+        
+        redirect_to "/pmap_inventories"
     end
 
     def delete
+        @item = PmapInventory.find(params[:id])
         respond_to do |format|
             format.js {render layout: false}
             format.html { render 'delete'} # I had to tell rails to use the index by default if it's a html request. 
@@ -57,6 +84,20 @@ class PmapInventoriesController < ApplicationController
     end
 
     def destroy
+        item = PmapInventory.where(:pap_identifier => params[:id]).update(pmap_params)
+        if item.blank?
+            flash[:errors] = {title: "Failed to Delete Record", message: "Item with bottle id #{params[:id]} could not be found"}
+        else
+            flash[:success] = {title: "Successfully deleted record", message: "#{item.first.drug_name} #{item.first.lot_number} was successfully deleted."}
+            news = News.where("refers_to = ? AND resolved = ?", item.first.bottle_id, false).update({
+                :resolved => true,
+                :resolution => "Item was voided",
+                :date_resolved => Date.today
+            })
+            #logger.info "#{current_user.username} voided general inventory item #{params[:general_inventory][:gn_id]}"
+        end
+
+        redirect_to "/pmap_inventories"
     end
 
     private 

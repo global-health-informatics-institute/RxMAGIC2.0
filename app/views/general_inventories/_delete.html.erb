@@ -1,4 +1,4 @@
-<%= form_for :general_inventory,:url => "/delete_general_inventory_item/#{params[:id]}", :method => "POST" do |f| %>
+<%= form_for :general_inventory,:url => "/delete_general_inventory_item/#{@item.gn_identifier}", :method => "POST" do |f| %>
   <div class="card">
         <h5 class="card-header bg-dark text-light">Delete Item from Inventory</h5>
         <div class="card-body">
@@ -23,11 +23,10 @@
           </fieldset>
         </div>
         <div class="card-footer text-right">
-            <button type="button" class="btn btn-lg btn-danger mr-2" onMouseDown="hideModal()">Close</button>
             <button type="submit" class="btn btn-lg btn-success">Confirm Delete</button>
+            <button type="button" class="btn btn-lg btn-danger mr-2" onMouseDown="hideModal()">Close</button>
         </div>
     </div>
-    <%= f.hidden_field :gn_inventory_id, :value => params[:id]%>
     <%= f.hidden_field :voided_by, :value => current_user.id %>
     <%= f.hidden_field :voided, :value => true %>
 <% end %>

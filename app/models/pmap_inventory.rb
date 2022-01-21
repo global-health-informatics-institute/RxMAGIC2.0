@@ -49,4 +49,20 @@ class PmapInventory < ApplicationRecord
         self.manufacturer = self.mfn_id
       end
     end
+
+    def self.aboutToExpire_items
+      return PmapInventory.where("voided = ? AND current_quantity > ? AND expiration_date  BETWEEN ? AND ?",
+        false,0,Date.today.strftime('%Y-%m-%d'),Date.today.advance(:months => 2).end_of_month.strftime('%Y-%m-%d'))
+    end
+
+    def self.underStocked
+      
+    end
+
+    def self.expired_items
+      return PmapInventory.where("voided = ? AND current_quantity > ? AND expiration_date <= ? ", false,0, Date.current.strftime('%Y-%m-%d'))
+    end
+
+    def self.wellStocked
+    end
 end
