@@ -92,6 +92,7 @@
       </div>
     </div>
     <%= link_to '<button class="btn btn-primary btn-lg btn-block m-2 mt-4">Add PMAP Item</button>'.html_safe, "/pmap_inventories/new?patient_id=#{@patient.id}", remote: true %>       
+    <%= link_to '<button class="btn btn-info btn-lg btn-block m-2">Edit Patient</button>'.html_safe, edit_patient_path(@patient), remote: true %>  
     <%= link_to '<button class="btn btn-warning btn-lg btn-block m-2">Dispense (No Rx)</button>'.html_safe, "/refill?patient_id=#{@patient.id}", remote: true %>        
     <%= link_to '<button class="btn btn-danger btn-lg btn-block m-2">Cancel</button>'.html_safe, patients_path %>         
   </div>

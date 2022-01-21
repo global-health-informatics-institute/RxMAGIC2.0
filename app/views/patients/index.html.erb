@@ -34,8 +34,8 @@
             <tbody>
                 <% (@patients || []).each do |patient| %>
                     <tr>
-                        <td><%= link_to patient["first_name"],"/patient/#{patient['id']}"  %></td>
-                        <td><%= link_to patient["last_name"],"/patient/#{patient['id']}"  %></td>
+                        <td><%= link_to patient["first_name"],"/patients/#{patient['id']}"  %></td>
+                        <td><%= link_to patient["last_name"],"/patients/#{patient['id']}"  %></td>
                         <td><%= patient.full_gender %></td>
                         <td><%= patient.formatted_dob %></td>
                         <td style="text-align: center;"><%= patient.state %></td>

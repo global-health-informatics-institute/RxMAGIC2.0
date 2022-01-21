@@ -40,9 +40,23 @@ class PatientsController < ApplicationController
     end
 
     def edit
+        @patient = Patient.find(params[:id])
     end
 
     def update
+        patient = Patient.find(params[:id])
+        if patient.blank?
+            flash[:errors] = {title: "Patient Record Not Updated", message: "Record for could not be found."}
+        else
+            patient.update(patient_params)
+            if patient.errors.blank?
+                flash[:success] = {title: "Patient Record Created", message: "Record for #{patient.name} has been successfully updated!"}
+            else
+                flash[:errors] = {title: "Patient Record Not Updated", message: "Record for #{patient.name} could not be updated."}
+            end
+        end
+
+        redirect_to "/patients/#{params[:id]}"
     end
 
     def delete
