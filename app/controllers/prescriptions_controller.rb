@@ -33,6 +33,9 @@ class PrescriptionsController < ApplicationController
                 news.save
                 # logger.info "Prescription #{params[:id]} was voided by #{current_user.username}"
             end
+            flash[:success] = {title: "Prescription Voided", message: "Prescription was successfully voided!"}
+        else
+            flash[:errors] = {title: "Prescription Not Voided", message: "Prescription was not voided."}
         end
         redirect_to "/prescriptions"
     end

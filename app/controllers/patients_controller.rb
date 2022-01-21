@@ -22,7 +22,6 @@ class PatientsController < ApplicationController
             @pmap_meds[med.manufactured_by] = [] if @pmap_meds[med.manufactured_by].blank?
             @pmap_meds[med.manufactured_by] << ["#{med.drug_name}", med.current_quantity,med.manufacturer, med.rxaui]
         end
-        flash[:success] = {message: "Testing", title:"Title"}
     end
 
     def new 

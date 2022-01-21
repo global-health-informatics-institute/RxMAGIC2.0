@@ -7,9 +7,9 @@ class ManufacturersController < ApplicationController
         new_manufacturer = Manufacturer.create(mfn_params)
 
         if new_manufacturer.errors.blank?
-            flash[:success] = "#{new_manufacturer.name.titleize} was successfully added."
+            flash[:success] = {message: "#{new_manufacturer.name.titleize} was successfully added.", title:"Manufacturer Created"}
         else
-            flash[:errors] = new_manufacturer.errors
+            flash[:errors] = {message: "Manufacturer Could Not Be Added.", title:"Manufacturer Not Created"}
         end
 
         redirect_to "/manufacturers"
@@ -33,9 +33,9 @@ class ManufacturersController < ApplicationController
     def update
         mfn = Manufacturer.where("mfn_id = ? ", params[:manufacturer][:mfn_id]).update(mfn_params)
         if mfn.first.errors.blank? 
-            flash[:success] = "Successfully voided manufacturer #{mfn.first.name}"
+            flash[:success] = {message: "Successfully voided manufacturer #{mfn.first.name}", title: "Manufacturer Updated"}
         else
-            flash[:errors] = "Could not delete manufacturer"
+            flash[:errors] = {message: "Could not delete manufacturer", title: "Manufacturer Not Updated"}
         end
         
         redirect_to "/manufacturers"
@@ -52,9 +52,9 @@ class ManufacturersController < ApplicationController
     def destroy
         mfn = Manufacturer.where("mfn_id = ? ", params[:id]).update(:voided => true)
         if mfn.first.errors.blank? 
-            flash[:success] = "Successfully voided manufacturer #{mfn.first.name}"
+            flash[:success] = {message: "Successfully voided manufacturer #{mfn.first.name}", title: "Manufacturer Deleted"}
         else
-            flash[:errors] = "Could not delete manufacturer"
+            flash[:errors] = {message: "Could not delete manufacturer", title: "Manufacturer Not Deleted"}
         end
         
         redirect_to "/manufacturers"
