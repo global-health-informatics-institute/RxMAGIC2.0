@@ -7,6 +7,20 @@ class PmapInventoriesController < ApplicationController
         #@wellStocked = wellStocked.length
     end
 
+    def show
+        @item = PmapInventory.find(params[:id]) rescue nil
+
+        if @item.blank?
+          redirect_to "/reorders"
+        else
+          @inventory = PmapInventory.where("voided = ? AND current_quantity > 0 AND patient_id = ? AND rxaui = ?",
+                                           false, @item.patient_id, @item.rxaui).order(date_received: :asc)
+          @prescriptions = Prescription.where("voided = ? AND patient_id = ? AND rxaui = ?", false, @item.patient_id,
+                                              @item.rxaui).order(date_prescribed: :asc)
+          @patient = @item.patient
+        end
+    end
+
     def create
         
         new_item = PmapInventory.create(pmap_params)
@@ -26,7 +40,7 @@ class PmapInventoriesController < ApplicationController
             @mfn = Manufacturer.find(params[:mfn_id]).name
             @drug = Rxnconso.find_by_RXAUI(params[:rx]).STR
         end
-        @mfns = Manufacturer.select("mfn_id,name").where(:voided => false)
+        @mfns = Manufacturer.select("mfn_id,name").where(:has_pmap => true, :voided => false)
         respond_to do |format|
             format.js {render layout: false}
             format.html { render 'new'} # I had to tell rails to use the index by default if it's a html request. 
@@ -41,7 +55,7 @@ class PmapInventoriesController < ApplicationController
     
     def edit
         @item = PmapInventory.find(params[:id])
-        @mfns = Manufacturer.select(["mfn_id", "name"])
+        @mfns = Manufacturer.select(["mfn_id", "name"]).where(:has_pmap => true, :voided => false)
         respond_to do |format|
             format.js {render layout: false}
             format.html { render 'edit'} # I had to tell rails to use the index by default if it's a html request. 
@@ -54,6 +68,7 @@ class PmapInventoriesController < ApplicationController
             flash[:errors] = {title: "Failed to Update Record", message: "Item could not be found"}
         else
             item.lot_number = params[:pmap_inventory][:lot_number].upcase
+            item.reorder_date = params[:pmap_inventory][:reorder_date].to_date rescue nil
             item.expiration_date = params[:pmap_inventory][:expiration_date].to_date rescue nil
             item.received_quantity = params[:pmap_inventory][:received_quantity].to_i + (item.received_quantity - item.current_quantity)
             item.current_quantity = params[:pmap_inventory][:received_quantity].to_i
@@ -99,9 +114,17 @@ class PmapInventoriesController < ApplicationController
 
         redirect_to "/pmap_inventories"
     end
+    
+    def reorders
+        reorders = PmapInventory.where("reorder_date between ? AND ? AND voided = ?",
+                                       Date.today.beginning_of_week.strftime("%Y-%m-%d"),
+                                       Date.today.end_of_week.strftime("%Y-%m-%d"),false )
+    
+        @reorders = view_context.reorders(reorders)
+    end
 
     private 
     def pmap_params
-        params.require(:pmap_inventory).permit(:voided_by,:void_reason, :voided,:rxaui,:patient_id, :manufacturer, :mfn_id,:name, :lot_number, :expiration_date, :date_received, :received_quantity, :pap_inventory_id)
+        params.require(:pmap_inventory).permit(:voided_by,:void_reason, :voided,:rxaui,:patient_id, :manufacturer, :mfn_id,:name, :lot_number, :reorder_date, :expiration_date, :date_received, :received_quantity, :pap_inventory_id)
     end
 end

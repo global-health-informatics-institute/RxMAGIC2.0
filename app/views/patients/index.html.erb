@@ -52,13 +52,13 @@
         <div class="card mb-3">
             <div class="card-header text-white bg-info text-center"><h5 class="card-title">Patient Summary</h5></div>
             <div class="card-body ">
-                <a href="/patients" class="card text-center  m-2">
-                    <div class="card-body">
+                <a href="/patients" class="card text-center text-decoration-none m-2">
+                    <div class="card-body ">
                         <h5 class="card-subtitle">Total Patients</h5>
                         <p class="card-text"><%= @patient_count %></p>
                     </div>
                 </a>
-                <a href="/patients?pmap_only=true" class="card text-center mt-3 m-1">
+                <a href="/patients?pmap_only=true" class="card text-center text-decoration-none mt-3 m-1">
                     <div class="card-body">
                         <h5 class="card-subtitle">PMAP Patients</h5>
                         <p class="card-text"><%= @pmap_patients %></p>

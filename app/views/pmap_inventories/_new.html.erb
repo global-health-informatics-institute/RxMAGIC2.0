@@ -31,6 +31,12 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label for="itemReorderDate" class="col-md-10 col-form-label">Reorder Date</label>
+                <div class="col-md-11">
+                    <input type="date" class="form-control" id="itemReorderDate" placeholder="Reorder date (Month Day Year)" name="pmap_inventory[reorder_date]" min="<%= Date.today.strftime('%Y-%m-%d') %>" required>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label for="itemReceivedQn" class="col-md-10 col-form-label">Received Quantity</label>
                 <div class="col-md-11">
                     <input type="number" class="form-control" id="itemReceivedQn" placeholder="Enter Received Quantity" name="pmap_inventory[received_quantity]" required>

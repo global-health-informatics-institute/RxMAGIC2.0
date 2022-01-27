@@ -38,6 +38,12 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label for="itemReorderDate" class="col-md-10 col-form-label">Reorder Date</label>
+                <div class="col-md-11">
+                    <input type="date" class="form-control" id="itemReorderDate" name="pmap_inventory[order_date]" value="<%= @item.reorder_date %>" placeholder="Enter Item Reorder Date" required>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label for="itemReceivedQn" class="col-md-10 col-form-label">Received Quantity</label>
                 <div class="col-md-11">
                     <input type="number" class="form-control" id="itemReceivedQn" name="pmap_inventory[received_quantity]" value="<%= @item.received_quantity %>" placeholder="Enter Received Quantity" required>

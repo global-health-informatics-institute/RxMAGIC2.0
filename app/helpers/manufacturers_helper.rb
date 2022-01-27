@@ -6,4 +6,8 @@ module ManufacturersHelper
     def pmap_suppliers
         return PmapInventory.select("distinct manufacturer").count()
     end
+    def active_manufacturers
+        return Manufacturer.where(:voided => false).count()
+    end
+
 end

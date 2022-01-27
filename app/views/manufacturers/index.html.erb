@@ -51,19 +51,19 @@
         <div class="card mb-3">
             <div class="card-header text-white bg-info text-center"><h5 class="card-title">Manufacturer Summary</h5></div>
             <div class="card-body ">
-                <a href="#" class="card text-center  m-2">
+                <a href="/manufacturers" class="card text-center m-2 text-decoration-none">
                     <div class="card-body">
                     <h5 class="card-subtitle">Manufacturers</h5>
-                    <p class="card-text"><%= @manufacturers.length %></p>
+                    <p class="card-text"><%= active_manufacturers %></p>
                     </div>
                 </a>
-                <a href="#" class="card text-center mt-3 m-1">
+                <a href="/manufacturers?has_pmap=true" class="card text-center mt-3 m-1 text-decoration-none">
                     <div class="card-body">
                     <h5 class="card-subtitle">MFRs With PMAP</h5>
                     <p class="card-text"><%= pmap_options %></p>
                     </div>
                 </a>
-                <a href="#" class="card text-center mt-3 m-1">
+                <a href="/manufacturers?supports_us=true" class="card text-center mt-3 m-1 text-decoration-none">
                     <div class="card-body">
                     <h5 class="card-subtitle">Supporting Our Patients</h5>
                     <p class="card-text"><%= pmap_suppliers %></p>

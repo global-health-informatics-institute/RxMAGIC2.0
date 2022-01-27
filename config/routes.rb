@@ -8,6 +8,10 @@ Rails.application.routes.draw do
   get 'home/index'
   get 'home/about'
   get 'home/faq'
+  get 'home/custom_report'
+  get 'home/activity_sheet'
+  post '/report' => "home#custom_report"
+  get '/pharmacy_sheet/:date' => "home#activity_sheet"
   get '/provider_suggestions' => "home#provider_suggestions"
   get '/drug_name_suggestions' => "home#drug_name_suggestions"
 
@@ -29,6 +33,7 @@ Rails.application.routes.draw do
   get "pmap_inventories/print/:id" => "pmap_inventories#print"
   get "/void_pmap_inventory/:id" => "pmap_inventories#delete", as: 'void_pmap_inventory'
   post "/delete_pmap_inventory_item/:id" => "pmap_inventories#destroy"
+  get "/reorders" => "pmap_inventories#reorders"
 
   # Routes for prescriptions
   get "void_prescription/:id" => "prescriptions#void_prescription", as: 'void_prescription'

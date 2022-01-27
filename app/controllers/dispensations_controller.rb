@@ -52,7 +52,7 @@ class DispensationsController < ApplicationController
     def refill
         
         if request.post?
-            item = params[:dispensation][:bottle_id].gsub('$','').match(/g/i) ? GeneralInventory.find_by_gn_identifier(params[:dispensation][:bottle_id].gsub('$','')) : PMAPInventory.find_by_pap_identifier(params[:dispensation][:bottle_id].gsub('$',''))
+            item = params[:dispensation][:bottle_id].gsub('$','').match(/g/i) ? GeneralInventory.find_by_gn_identifier(params[:dispensation][:bottle_id].gsub('$','')) : PmapInventory.find_by_pap_identifier(params[:dispensation][:bottle_id].gsub('$',''))
             patient = Patient.find(params[:dispensation][:patient_id])
             inventory_type = params[:dispensation][:bottle_id].match(/g/i) ? "General" : "PMAP"
             flash[:errors] = {}
@@ -82,7 +82,7 @@ class DispensationsController < ApplicationController
                         flash[:errors]= {title: "Refill Not Completed", message: "#{item.drug_name} could not be dispensed due to insufficient quntity."}
                     end
                     if flash[:errors].blank?
-                        print_and_redirect("/print_dispensation_label/#{prescription.id}", "/patients/#{patient.id}")
+                        print_and_redirect("/print_dispensation_label?prescription=#{prescription.id}", "/patients/#{patient.id}")
                     else
                         redirect_to "/patients/#{patient.id}"
                     end

@@ -1,6 +1,13 @@
 class ManufacturersController < ApplicationController
     def index
-        @manufacturers = Manufacturer.where("voided = ?", false)
+        if !params[:has_pmap].blank? 
+            @manufacturers = Manufacturer.where(:has_pmap => true, :voided => false)
+        elsif !params[:supports_us].blank?
+            @manufacturers = Manufacturer.where("mfn_id in (?)", PmapInventory.where(:voided => false ).pluck(:manufacturer).uniq)
+        else
+            @manufacturers = Manufacturer.where(:voided => false)
+        end
+        
     end
 
     def create

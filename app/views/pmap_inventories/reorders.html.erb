@@ -1,0 +1,51 @@
+<link rel="stylesheet" type="text/css" href=<%= asset_path("datatables.min.css") %> />
+<script type="text/javascript" src=<%= asset_path("datatables.min.js") %>> </script>
+
+<div class="page-header" style="margin: 0px !important;padding: 0px !important;">
+  <h3><%=t '.title', :default => "PMAP Reorders" %></h3>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <table id="reorders" class="table table-striped table-bordered" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Gender</th>
+                    <th>Date of Birth</th>
+                    <th style="text-align: center;">Drug Name</th>
+                    <th>Reorder Date</th>
+                    <th>Company</th>
+                    <th style="width: 12.5%;">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% i = 1 %>
+                <% (@reorders || []).each do |item| %>
+                    <tr>
+                        <td><%= item["patient_name"] %></td>
+                        <td><%= item["patient_gender"] %></td>
+                        <td><%= item["patient_birthdate"] %></td>
+                        <td><%= item["drug"] %></td>
+                        <td><%= item["reorder_date"]%></td>
+                        <td><%= item["manufacturer"]%></td>
+                        <td style="text-align: center;">
+                        <%= link_to "View","/pmap_inventories/#{item['id']}"  %>
+                        </td>
+                    </tr>
+                    <% i += 1 %>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#reorders').DataTable({
+            "pageLength": 9,
+            "lengthChange": false        
+            });
+    } );
+</script>
