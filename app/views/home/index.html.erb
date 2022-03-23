@@ -1,3 +1,21 @@
+<!-- Modal -->
+<div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" id="modalContent">
+      <div class="modal-header bg-dark text-light"id="modalTitle">
+        Cancel News Alert
+      </div>
+      <div class="modal-body" id="msg">
+        <p>Modal body text goes here.</p>
+      </div>
+      <div class="card-footer text-right">
+        <button type="button" class="btn btn-success mr-1" id="successBtn">Save changes</button>
+        <button type="button" class="btn btn-secondary" onMouseDown="hideModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-sm-9">
     <h5>Prescription Management</h5><hr>
@@ -115,90 +133,15 @@
         <h4 class="font-weight-normal text-lg-left pl-2">Alerts</h4>
       </div>
       <div class="p-0 mb-0 border overflow-auto" style="height: 75vh !important;">
-        <div class="border rounded m-2">
-          <table class="table table-borderless">
-            <thead>
-            <tr>
-              <th class="pt-1 pb-1"><img class="icon-small" src=<%= asset_path("expiring.png")%>></th>
-              <th class="pt-1 pb-1 text-center text-capitalize">Item about to expire</th>
-              <th class=" pt-1 pb-1 text-right"><img class="icon-small" src=<%= asset_path("close.png")%>></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td colspan=3 class="card-text font-weight-light p-2">
-                Crestor 40 Mg Oral Tablet with lot number RGTLH for Ethel Trettin expires soon.
-              </td>
-            </tr>
-            <tr>
-              <td colspan=3 class="text-center p-0"><button class="btn-sm btn-primary">Transfer Items</button></td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="border rounded m-2">
-          <table class="table table-borderless">
-            <thead>
-            <tr>
-              <th class="pt-1 pb-1"><img class="icon-small" src=<%= asset_path("expiring.png")%>></th>
-              <th class="pt-1 pb-1 text-center text-capitalize">Item about to expire</th>
-              <th class=" pt-1 pb-1 text-right"><img class="icon-small" src=<%= asset_path("close.png")%>></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td colspan=3 class="card-text font-weight-light p-2">
-                Crestor 40 Mg Oral Tablet with lot number RGTLH for Ethel Trettin expires soon.
-              </td>
-            </tr>
-            <tr>
-              <td colspan=3 class="text-center p-0"><button class="btn-sm btn-primary">Transfer Items</button></td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="border rounded m-2">
-          <table class="table table-borderless">
-            <thead>
-            <tr>
-              <th class="pt-1 pb-1"><img class="icon-small" src=<%= asset_path("expiring.png")%>></th>
-              <th class="pt-1 pb-1 text-center text-capitalize">Item about to expire</th>
-              <th class=" pt-1 pb-1 text-right"><img class="icon-small" src=<%= asset_path("close.png")%>></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td colspan=3 class="card-text font-weight-light p-2">
-                Crestor 40 Mg Oral Tablet with lot number RGTLH for Ethel Trettin expires soon.
-              </td>
-            </tr>
-            <tr>
-              <td colspan=3 class="text-center p-0"><button class="btn-sm btn-primary">Transfer Items</button></td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="border rounded m-2">
-          <table class="table table-borderless">
-            <thead>
-            <tr>
-              <th class="pt-1 pb-1"><img class="icon-small" src=<%= asset_path("expiring.png")%>></th>
-              <th class="pt-1 pb-1 text-center text-capitalize">Item about to expire</th>
-              <th class=" pt-1 pb-1 text-right"><img class="icon-small" src=<%= asset_path("close.png")%>></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td colspan=3 class="card-text font-weight-light p-2">
-                Crestor 40 Mg Oral Tablet with lot number RGTLH for Ethel Trettin expires soon.
-              </td>
-            </tr>
-            <tr>
-              <td colspan=3 class="text-center p-0"><button class="btn-sm btn-primary">Transfer Items</button></td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
+        <%= render '/news/index' %>
       </div>
   </div>
 </div>
+
+<script>
+  function hideModal(){
+    document.getElementById("appModal").style.display = "none"
+    document.getElementById("appModal").classList.remove("show")
+   }
+
+</script>

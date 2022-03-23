@@ -3,7 +3,7 @@ class DispensationsController < ApplicationController
         
     def new
         @prescription = Prescription.find(params[:rx_id])
-        @item = params[:bottle_id].match(/g/i) ? GeneralInventory.find_by_gn_identifier(params[:bottle_id]) : PMAPInventory.find_by_pap_identifier(params[:bottle_id])
+        @item = params[:bottle_id].match(/g/i) ? GeneralInventory.find_by_gn_identifier_and_voided(params[:bottle_id],false) : PMAPInventory.find_by_pap_identifier_and_voided(params[:bottle_id],false)
         respond_to do |format|
             format.js {render layout: false}
             format.html { render 'new'} 
@@ -14,10 +14,14 @@ class DispensationsController < ApplicationController
         
         # First we check which inventory we are dispensing from
         @prescription = Prescription.find(params[:dispensation][:prescription_id])
-        @item = params[:bottle_id].match(/g/i) ? GeneralInventory.find_by_gn_identifier(params[:bottle_id].gsub('$','')) : PMAPInventory.find_by_pap_identifier(params[:bottle_id].gsub('$',''))
+        @item = params[:bottle_id].match(/g/i) ? GeneralInventory.find_by_gn_identifier_and_voided(params[:bottle_id].gsub('$',''),false) : PMAPInventory.find_by_pap_identifier_and_voided(params[:bottle_id].gsub('$',''),false)
         inventory_type = params[:bottle_id].gsub('$','').match(/g/i) ? "General" : "PMAP"
         flash[:errors] = {}
 
+        if @item.blank? and inventory_type == "PMAP"
+            @item = GeneralInventory.find_by_gn_identifier_and_voided(params[:dispensation][:bottle_id].gsub('$',''), false)
+        end
+        
         #Dispense according to inventory while paying attention to possible race conditions
         if @item.errors.blank?
             if dispense_item(@item,@prescription,params[:quantity])
@@ -30,7 +34,7 @@ class DispensationsController < ApplicationController
         end
         
         if @prescription.amount_dispensed >= @prescription.quantity
-            #News.resolve(params[:dispensation][:prescription],"new prescription","prescritption filled")
+            alert = News.resolve(params[:dispensation][:prescription_id],"new prescription","prescritption filled")
             print_and_redirect("/print_dispensation_label?prescription=#{@prescription.id}", "/prescriptions")
         else
             redirect_to @prescription
@@ -49,10 +53,9 @@ class DispensationsController < ApplicationController
         send_data(print_string,:type=>"application/label; charset=utf-8", :stream=> false, :filename=>"#{('a'..'z').to_a.shuffle[0,8].join}.lbl", :disposition => "inline")
     end
 
-    def refill
-        
+    def refill  
         if request.post?
-            item = params[:dispensation][:bottle_id].gsub('$','').match(/g/i) ? GeneralInventory.find_by_gn_identifier(params[:dispensation][:bottle_id].gsub('$','')) : PmapInventory.find_by_pap_identifier(params[:dispensation][:bottle_id].gsub('$',''))
+            item = params[:dispensation][:bottle_id].gsub('$','').match(/g/i) ? GeneralInventory.find_by_gn_identifier_and_voided(params[:dispensation][:bottle_id].gsub('$',''), false) : PmapInventory.find_by_pap_identifier_and_voided(params[:dispensation][:bottle_id].gsub('$',''), false)
             patient = Patient.find(params[:dispensation][:patient_id])
             inventory_type = params[:dispensation][:bottle_id].match(/g/i) ? "General" : "PMAP"
             flash[:errors] = {}
@@ -64,6 +67,10 @@ class DispensationsController < ApplicationController
             if provider.blank?
                 provider = Provider.create(:first_name => params[:dispensation][:provider].split(" ")[0],
                                     :last_name => (params[:dispensation][:provider].split(" ")[1] || params[:dispensation][:provider].split(" ")[0]))
+            end
+
+            if item.blank? and inventory_type == "PMAP"
+                item = GeneralInventory.find_by_gn_identifier_and_voided(params[:dispensation][:bottle_id].gsub('$',''), false)
             end
 
             #Dispense according to inventory while paying attention to possible race conditions
@@ -87,10 +94,7 @@ class DispensationsController < ApplicationController
                         redirect_to "/patients/#{patient.id}"
                     end
                 end
-            end
-            
-            
-
+            end          
         else
             @patient = Patient.find(params[:patient_id])
             @providers = Provider.all.collect{|x| "#{x.first_name.squish rescue ''} #{x.last_name.squish  rescue ''}"}.uniq

@@ -64,5 +64,31 @@ class PmapInventory < ApplicationRecord
     end
 
     def self.wellStocked
+      return PmapInventory.select("patient_id, rxaui, count(rxaui) as count").where("current_quantity > 0 and voided = ?",false).group(:patient_id,:rxaui)
+    end
+
+    def self.move_to_general(bottle_id)
+      item = PmapInventory.find_by_pap_identifier_and_voided(bottle_id,false)
+  
+      unless item.blank?
+        PmapInventory.transaction do
+          item.voided = true
+          item.void_reason = "Moved to general inventory"
+          item.manufacturer = "Unknown" if item.manufacturer.blank?
+  
+          if item.save
+            new_stock_entry = GeneralInventory.new
+            new_stock_entry.lot_number = item.lot_number.upcase
+            new_stock_entry.expiration_date = item.expiration_date rescue nil
+            new_stock_entry.received_quantity = item.current_quantity
+            new_stock_entry.current_quantity = item.current_quantity
+            new_stock_entry.rxaui = item.rxaui
+            new_stock_entry.gn_identifier= item.pap_identifier
+            new_stock_entry.save
+            return new_stock_entry
+          end
+        end
+      end
+      return false
     end
 end

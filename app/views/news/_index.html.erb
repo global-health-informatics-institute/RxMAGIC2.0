@@ -1,0 +1,149 @@
+<% (@alerts || []).each do |alert| %>
+
+    <% case alert.news_type.downcase %>
+        <% when "new prescription" %>
+            <% unless suppress_prescription_alert %>
+                <div class="border rounded m-2">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th class="pt-1 pb-1"><img class="icon-small" src=<%= asset_path("dispense_small.png")%>></th>
+                                <th class="pt-1 pb-1 text-center text-capitalize">New Prescription</th>
+                                <th class=" pt-1 pb-1 text-right">
+                                    <%= link_to image_tag('close'), void_news_path(alert), remote: true %>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan=3 class="card-text font-weight-light p-2">
+                                    <%= alert.message %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan=3 class="text-center p-0">
+                                    <button class="btn-sm btn-success" onMouseDown="dispense(<%= alert.refers_to %>)">Dispense</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            <% end %>
+        <% when "low pmap stock" %>
+        <% when "low general stock" %>
+        <% when "missing reference" %>
+        <% when "expiring item" %>
+            <% unless suppress_expiry_alert %>
+                <div class="border rounded m-2">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th class="pt-1 pb-1"><img class="icon-small" src=<%= asset_path("expiring.png")%>></th>
+                                <th class="pt-1 pb-1 text-center text-capitalize">Item about to expire</th>
+                                <th class=" pt-1 pb-1 text-right">
+                                    <%= link_to image_tag('close'), void_news_path(alert), remote: true %>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan=3 class="card-text font-weight-light p-2">
+                                    <%= alert.message %>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            <% end %>
+        <% when "expired item" %>
+            <% unless suppress_expiry_alert %>
+                <div class="border rounded m-2">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th class="pt-1 pb-1"><img class="icon-small" src=<%= asset_path("expired.png")%>></th>
+                                <th class="pt-1 pb-1 text-center text-capitalize">Item has expired</th>
+                                <th class=" pt-1 pb-1 text-right">
+                                    <%= link_to image_tag('close'), void_news_path(alert), remote: true %>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan=3 class="card-text font-weight-light p-2">
+                                    <%= alert.message %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan=3 class="text-center p-0">
+                                    <button class="btn-sm btn-primary" onMouseDown="dispose('<%= alert.refers_to %>')">Dispose Item</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            <% end %>
+        <% when "under utilized item" %>
+            <% unless suppress_pmap_alert %>
+                <div class="border rounded m-2">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th class="pt-1 pb-1"><img class="icon-small" src=<%= asset_path("move.png")%>></th>
+                                <th class="pt-1 pb-1 text-center text-capitalize">Unutilized PMAP Item</th>
+                                <th class=" pt-1 pb-1 text-right">
+                                    <%= link_to image_tag('close'), void_news_path(alert), remote: true %>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan=3 class="card-text font-weight-light p-2">
+                                    <%= alert.message %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan=3 class="text-center p-0">
+                                    <button class="btn-sm btn-primary" onMouseDown="confirmTransfer('<%= alert.refers_to %>')">Transfer Item</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            <% end %>
+    <% end %>
+<% end %>
+
+<script>
+
+    function dispense(id){
+        window.location = '/prescriptions/' + id
+    }
+
+    function dispose(id){
+        var submitBtn = document.getElementById("successBtn")
+        submitBtn.innerHTML = "Confirm Disposal"        
+        submitBtn.onmousedown = function() {
+            window.location = '/dispose_item/' + id.toString()
+        }       
+        document.getElementById("modalTitle").innerHTML = "Confirm Disposal"
+        document.getElementById("msg").innerHTML = "Are you sure you want to dispose this expired item ?"
+        document.getElementById("appModal").style.display = "block"
+        document.getElementById("appModal").classList.add("show")
+    }
+
+    function confirmTransfer(id)
+    {
+        var submitBtn = document.getElementById("successBtn")
+        submitBtn.innerHTML = "Confirm Transfer"        
+        submitBtn.onmousedown = function() {
+            window.location = '/move_pmap_inventory/' + id
+        }       
+        document.getElementById("modalTitle").innerHTML = "Confirm Transfer"
+        document.getElementById("msg").innerHTML = "Are you sure you want to transfer this item to the general inventory?"
+        document.getElementById("appModal").style.display = "block"
+        document.getElementById("appModal").classList.add("show")
+    }
+</script>
+
+

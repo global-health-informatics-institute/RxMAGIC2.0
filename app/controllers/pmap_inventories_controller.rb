@@ -2,9 +2,9 @@ class PmapInventoriesController < ApplicationController
     def index
         @items = PmapInventory.where("current_quantity > ? and voided = ? ", 0, false)
         @aboutToExpire = PmapInventory.aboutToExpire_items.length
-        #@underStocked = underStocked.length
+        @underStocked = News.where({:resolved => false, :news_type => "under utilized item"}).length
         @expired = PmapInventory.expired_items.length
-        #@wellStocked = wellStocked.length
+        @wellStocked = PmapInventory.wellStocked.length
     end
 
     def show
@@ -122,6 +122,24 @@ class PmapInventoriesController < ApplicationController
     
         @reorders = view_context.reorders(reorders)
     end
+
+    def move_inventory
+        #Move pmap item to general inventory
+    
+        result = PmapInventory.move_to_general(params[:id])
+    
+        if result.blank?
+          flash[:errors] = {} if flash[:errors].blank?
+          flash[:errors][:missing] = ["Item with bottle ID #{params[:id]} was not found"]
+        elsif result.errors.blank?
+          News.resolve(params[:id],"under utilized item","Moved to general inventory")
+          flash[:success] = {title: "Transfer Successful", message: "#{result.drug_name} #{result.lot_number} was successfully moved to general inventory."}
+        else
+          flash[:errors] = {title: "Transfer Unsuccessful", message: "Item with bottle id #{params[:id]} could not be transferred"}
+        end
+        
+        redirect_to "/pmap_inventories"
+      end
 
     private 
     def pmap_params

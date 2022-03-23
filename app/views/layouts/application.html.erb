@@ -49,10 +49,10 @@
     <% if (!flash[:errors].blank? || !flash[:success].blank?) %>
       <div class="toast mt-3" style="position: absolute; top: 25; right: 50%;">
         <div class="toast-header <%= flash[:success].blank? ? 'bg-danger' : 'bg-success' %> text-white">
-            <h6><%= flash[:success].blank? ? flash[:errors][:title] : flash[:success][:title]  %></h6>
+            <h6><%= flash[:success].blank? ? flash[:errors]["title"] : flash[:success]["title"]  %></h6>
         </div>
-        <div class="toast-body">
-            <%= flash[:success].blank? ? flash[:errors][:message] : flash[:success][:message] %>
+        <div class="toast-body p-1">
+            <%= flash[:success].blank? ? flash[:errors]["message"] : flash[:success]["message"] %>
         </div>
       </div>
       

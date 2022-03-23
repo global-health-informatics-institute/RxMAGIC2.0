@@ -1,0 +1,13 @@
+<%= form_for :news,:url => "/news/#{@news.id}", :method => "DELETE" do |f| %>
+  <div class="card">
+        <h5 class="card-header bg-dark text-light">Cancel News Alert</h5>
+        <div class="card-body">
+            <p class="mb-0">Are you sure you want to cancel this alert?</p>
+        </div>
+        <div class="card-footer text-right">
+            <button type="submit" class="btn btn-success mr-1">Confirm Delete</button>
+            <button type="button" class="btn btn-danger" onMouseDown="hideModal()">Close</button>
+        </div>
+    </div>
+    <%= f.hidden_field :voided, :value => true %>
+<% end %>

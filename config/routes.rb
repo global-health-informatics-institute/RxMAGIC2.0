@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get 'home/custom_report'
   get 'home/activity_sheet'
   post '/report' => "home#custom_report"
+  get '/dispose_item/:id' => "home#dispose_item"
   get '/pharmacy_sheet/:date' => "home#activity_sheet"
   get '/provider_suggestions' => "home#provider_suggestions"
   get '/drug_name_suggestions' => "home#drug_name_suggestions"
@@ -30,10 +31,12 @@ Rails.application.routes.draw do
 
 
   # Routes for the pmap inventory 
-  get "pmap_inventories/print/:id" => "pmap_inventories#print"
-  get "/void_pmap_inventory/:id" => "pmap_inventories#delete", as: 'void_pmap_inventory'
-  post "/delete_pmap_inventory_item/:id" => "pmap_inventories#destroy"
   get "/reorders" => "pmap_inventories#reorders"
+  get "pmap_inventories/print/:id" => "pmap_inventories#print"
+  get "/move_pmap_inventory/:id" => "pmap_inventories#move_inventory"
+  post "/delete_pmap_inventory_item/:id" => "pmap_inventories#destroy"
+  get "/void_pmap_inventory/:id" => "pmap_inventories#delete", as: 'void_pmap_inventory'
+
 
   # Routes for prescriptions
   get "void_prescription/:id" => "prescriptions#void_prescription", as: 'void_prescription'
@@ -57,7 +60,12 @@ Rails.application.routes.draw do
   post "/toggle_pmap/:id" => "manufacturers#toggle_pmap"
   get "/void_manufacturer/:id" => "manufacturers#delete", as: 'void_manufacturer'
 
+
+  # Routes for news
+  get "/void_news_item/:id" => "news#delete", as: 'void_news'
+
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  resources :news
   resources :users
   resources :patients
   resources :prescriptions

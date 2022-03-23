@@ -1,5 +1,7 @@
 class HomeController < ApplicationController
   def index
+    #This is the landing page for the application
+    @alerts = News.where({:resolved => false}).order(created_at: :desc)
   end
 
   def dashboard
@@ -45,8 +47,8 @@ class HomeController < ApplicationController
                                             BETWEEN ? and ?", false, @start_date, @end_date).group("rxaui")
 
       dispensations = Dispensation.find_by_sql("select rxaui, sum(d.quantity) as quantity from dispensations as d left join
-                                       prescriptions p on d.rx_id=p.rx_id where dispensation_date > '#{@end_date}' and
-                                       d.voided =0 and p.voided =0 group by rxaui, inventory_id")
+                                       prescriptions p on d.rx_id=p.rx_id where d.voided =0 and p.voided =0 
+                                       and dispensation_date BETWEEN '#{@start_date}' AND '#{@end_date}'  group by rxaui, inventory_id")
 
 
       inventory = GeneralInventory.find_by_sql("SELECT inventory.rxaui,sum(current_quantity)
@@ -57,8 +59,6 @@ class HomeController < ApplicationController
                                                 and date_received <= '#{@end_date}') as inventory group by inventory.rxaui")
 
       @records = view_context.compile_report(prescriptions,inventory, dispensations)
-
-
     else
       @title = "Inventory and Dispensation Report"
     end
@@ -116,4 +116,21 @@ class HomeController < ApplicationController
     end
   end
   
+  def dispose_item
+    item = params[:id].match(/g/i) ? GeneralInventory.find_by_gn_identifier_and_voided(params[:id],false) : PMAPInventory.find_by_pap_identifier_and_voided(params[:id],false)
+    inventory_type = params[:id].gsub('$','').match(/g/i) ? "General" : "PMAP"
+        
+    if item.blank? and inventory_type == "PMAP"
+        item = GeneralInventory.find_by_gn_identifier_and_voided(params[:id].gsub('$',''), false)
+    end
+
+    item.update(voided: true, void_reason: "Expired item")
+    if item.errors.blank?
+      flash[:success] = {title: "Item Disposed",message: "Item with bottle ID #{params[:id].gsub('$','')} was successfully disposed."}
+      news_item = News.where("refers_to = ? AND resolved = ? AND news_type = ?",params[:id], false,"expired item").update(:resolved => true,:resolution => "Item Disposed",:date_resolved => Date.today)
+    else
+      flash[:errors] = {title: "Missing Item",message: "Item with bottle ID #{params[:id].gsub('$','')} could not be disposed."}
+    end
+    redirect_to "/"
+  end
 end
